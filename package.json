@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A CLI to help with DLQ messages processing",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "jest"
   },
