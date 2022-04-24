@@ -1,0 +1,32 @@
+{
+  "name": "dlq-utils",
+  "version": "1.0.0",
+  "description": "A CLI to help with DLQ messages processing",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "bin": {
+    "dlq-utils": "./bin/index.js"
+  },
+  "keywords": [
+    "cli",
+    "dlq",
+    "dead-letter-queue",
+    "aws"
+  ],
+  "author": "leoaugustov",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.76.0",
+    "commander": "^9.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1",
+    "prettier": "2.6.2"
+  }
+}
