@@ -1,10 +1,12 @@
 import { receiveMessages, deleteMessage } from '../src/sqs';
 
+function createSqsClient() {
+  return  { send: jest.fn() };
+}
+
 describe('receiveMessages', () => {
   it('should build command correctly, call client and map messages returned', async () => {
-    const sqsClient = {
-      send: jest.fn()
-    };
+    const sqsClient = createSqsClient();
 
     const messages = [{
       Body: 'messageBody1',
@@ -34,13 +36,22 @@ describe('receiveMessages', () => {
     }));
     expect(returnedMessages).toEqual(expectedMessages);
   });
+
+  it("should return empty array when response's Messages attribute undefined", async () => {
+    const sqsClient = createSqsClient();
+
+    sqsClient.send.mockReturnValueOnce({});
+
+    const returnedMessages = await receiveMessages(sqsClient);
+
+    expect(sqsClient.send.mock.calls.length).toBe(1);
+    expect(returnedMessages).toHaveLength(0);
+  })
 });
 
 describe('deleteMessage', () => {
   it('should build command correctly and call client', async () => {
-    const sqsClient = {
-      send: jest.fn()
-    };
+    const sqsClient = createSqsClient();
 
     const messageReceiptHandle = 'receiptHandle';
 

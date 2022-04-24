@@ -6,10 +6,14 @@ export async function receiveMessages(sqsClient) {
     WaitTimeSeconds: 5
   }));
 
-  return response.Messages.map(m => ({
-    body: m.Body,
-    receiptHandle: m.ReceiptHandle
-  }));
+  const messages = response.Messages;
+  if(messages) {
+    return messages.map(m => ({
+      body: m.Body,
+      receiptHandle: m.ReceiptHandle
+    }));
+  }
+  return [];
 }
 
 export async function deleteMessage(sqsClient, messageReceiptHandle) {
