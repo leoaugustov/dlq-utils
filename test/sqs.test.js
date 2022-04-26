@@ -1,4 +1,4 @@
-import { receiveMessages, deleteMessage } from '../src/sqs';
+import { receiveMessages, deleteMessages } from '../src/sqs';
 
 function createSqsClient() {
   return  { send: jest.fn() };
@@ -49,17 +49,39 @@ describe('receiveMessages', () => {
   })
 });
 
-describe('deleteMessage', () => {
+describe('deleteMessages', () => {
   it('should build command correctly and call client', async () => {
     const sqsClient = createSqsClient();
 
-    const messageReceiptHandle = 'receiptHandle';
+    sqsClient.send.mockReturnValueOnce({});
 
-    await deleteMessage(sqsClient, messageReceiptHandle);
+    const messagesReceiptHandles = [ 'receiptHandle1', 'receiptHandle2' ];
+
+    await deleteMessages(sqsClient, messagesReceiptHandles);
 
     expect(sqsClient.send.mock.calls.length).toBe(1);
 
     const commandInput = sqsClient.send.mock.calls[0][0].input;
-    expect(commandInput.ReceiptHandle).toBe(messageReceiptHandle);
+    expect(commandInput.Entries).toEqual([{
+      Id: '0',
+      ReceiptHandle: messagesReceiptHandles[0]
+    }, {
+      Id: '1',
+      ReceiptHandle: messagesReceiptHandles[1]
+    }]);
   });
+
+  it('should throw error when some batch entry fails', async () => {
+    const sqsClient = createSqsClient();
+
+    sqsClient.send.mockReturnValueOnce({
+      Failed: [{
+        Id: '1234',
+        Code: 'ERR123'
+      }]
+    });
+
+    await expect(async () => await deleteMessages(sqsClient, [ 'receiptHandle1', 'receiptHandle2' ]))
+      .rejects.toThrow(Error);
+  })
 });
