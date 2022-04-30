@@ -50,6 +50,14 @@ describe('receiveMessages', () => {
 });
 
 describe('deleteMessages', () => {
+  it('should do nothing when empty array of messages receipt handles', async () => {
+    const sqsClient = createSqsClient();
+
+    await deleteMessages(sqsClient, []);
+
+    expect(sqsClient.send.mock.calls.length).toBe(0);
+  });
+
   it('should build command correctly and call client', async () => {
     const sqsClient = createSqsClient();
 

@@ -17,6 +17,10 @@ export async function receiveMessages(sqsClient) {
 }
 
 export async function deleteMessages(sqsClient, messagesReceiptHandles) {
+  if(messagesReceiptHandles.length === 0) {
+    return;
+  }
+
   const inputEntries = [];
   const receiptHandlesById = new Map();
   messagesReceiptHandles.forEach((receiptHandle, i) => {
