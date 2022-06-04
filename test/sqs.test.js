@@ -1,8 +1,22 @@
-import { receiveMessages, deleteMessages } from '../src/sqs';
+import { sendMessage, receiveMessages, deleteMessages } from '../src/sqs';
 
 function createSqsClient() {
   return  { send: jest.fn() };
 }
+
+describe('sendMessage', () => {
+  it('should build command correctly and call client', async () => {
+    const sqsClient = createSqsClient();
+    const message = 'message';
+
+    await sendMessage(sqsClient, message);
+
+    expect(sqsClient.send.mock.calls.length).toBe(1);
+
+    const commandInput = sqsClient.send.mock.calls[0][0].input;
+    expect(commandInput.MessageBody).toBe(message);
+  });
+});
 
 describe('receiveMessages', () => {
   it('should build command correctly, call client and map messages returned', async () => {
