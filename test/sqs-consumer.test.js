@@ -14,13 +14,13 @@ beforeEach(() => {
 });
 
 describe('consumeMessages', () => {
-  it('should not execute message consumer when no messages received', () => {
+  it('should not execute message consumer when no messages received', async () => {
       const sqsClient = createSqsClient();
       const messageConsumer = jest.fn();
 
       receiveMessages.mockReturnValueOnce([]);
 
-      consumeMessages(sqsClient, messageConsumer);
+      await consumeMessages(sqsClient, messageConsumer);
 
       expect(receiveMessages.mock.calls.length).toBe(1);
       expect(messageConsumer.mock.calls.length).toBe(0);
@@ -28,7 +28,7 @@ describe('consumeMessages', () => {
       expect(deleteMessages.mock.calls[0][1]).toEqual([]);
   });
 
-  it('should execute message consumer when messages received', () => {
+  it('should execute message consumer when messages received', async () => {
     const sqsClient = createSqsClient();
     const messageConsumer = jest.fn();
 
@@ -43,7 +43,7 @@ describe('consumeMessages', () => {
       .mockReturnValueOnce([messages[1]])
       .mockReturnValueOnce([]);
 
-    consumeMessages(sqsClient, messageConsumer);
+    await consumeMessages(sqsClient, messageConsumer);
 
     expect(receiveMessages.mock.calls.length).toBe(3);
 
@@ -52,7 +52,7 @@ describe('consumeMessages', () => {
     expect(messageConsumer.mock.calls[1][0]).toEqual(messages[1]);
   });
 
-  it('should delete message when message consumer return true for it', () => {
+  it('should delete message when message consumer return true for it', async () => {
     const sqsClient = createSqsClient();
     const messageConsumer = jest.fn();
     messageConsumer.mockReturnValue(true);
@@ -68,7 +68,7 @@ describe('consumeMessages', () => {
       .mockReturnValueOnce([messages[1]])
       .mockReturnValueOnce([]);
 
-    consumeMessages(sqsClient, messageConsumer);
+    await consumeMessages(sqsClient, messageConsumer);
 
     expect(receiveMessages.mock.calls.length).toBe(3);
 
@@ -78,7 +78,7 @@ describe('consumeMessages', () => {
     expect(deleteMessages.mock.calls[2][1]).toEqual([]);
   });
 
-  it('should not delete message when message consumer return false for it', () => {
+  it('should not delete message when message consumer return false for it', async () => {
     const sqsClient = createSqsClient();
     const messageConsumer = jest.fn();
     messageConsumer.mockReturnValue(false);
@@ -94,7 +94,7 @@ describe('consumeMessages', () => {
       .mockReturnValueOnce([messages[1]])
       .mockReturnValueOnce([]);
 
-    consumeMessages(sqsClient, messageConsumer);
+    await consumeMessages(sqsClient, messageConsumer);
 
     expect(receiveMessages.mock.calls.length).toBe(3);
     expect(messageConsumer.mock.calls.length).toBe(2);
