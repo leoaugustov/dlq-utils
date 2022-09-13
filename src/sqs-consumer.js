@@ -1,9 +1,9 @@
 import { receiveMessages, deleteMessages } from './sqs';
 
-export async function consumeMessages(sqsClient, messageConsumer) {
+export async function consumeMessages(sqsClient, queueUrl, messageConsumer) {
   let messages = [];
   do {
-    messages = receiveMessages(sqsClient);
+    messages = receiveMessages(sqsClient, queueUrl);
 
     let messagesToDelete = [];
     messages.forEach(message => {
@@ -11,7 +11,7 @@ export async function consumeMessages(sqsClient, messageConsumer) {
         messagesToDelete.push(message.receiptHandle);
       }
     });
-    deleteMessages(sqsClient, messagesToDelete);
+    deleteMessages(sqsClient, queueUrl, messagesToDelete);
     messagesToDelete = [];
   }while(messages.length > 0);
 }
