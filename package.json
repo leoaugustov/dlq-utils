@@ -18,7 +18,9 @@
   "jest": {
     "transformIgnorePatterns": [
       "/node_modules/(?!(tempy|unique-string|crypto-random-string|is-stream)/)"
-    ]
+    ],
+    "verbose": true,
+    "clearMocks": true
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.76.0",

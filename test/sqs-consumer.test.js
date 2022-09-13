@@ -9,10 +9,6 @@ function createSqsClient() {
   return  { send: jest.fn() };
 }
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('consumeMessages', () => {
   it('should not execute message consumer when no messages received', async () => {
       const sqsClient = createSqsClient();
