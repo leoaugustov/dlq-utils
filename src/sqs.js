@@ -1,15 +1,17 @@
 import { SendMessageCommand, ReceiveMessageCommand, DeleteMessageBatchCommand } from '@aws-sdk/client-sqs';
 
-export async function sendMessage(sqsClient, message) {
+export async function sendMessage(sqsClient, queueUrl, message) {
   sqsClient.send(new SendMessageCommand({
-    MessageBody: message
+    MessageBody: message,
+    QueueUrl: queueUrl
   }));
 }
 
-export async function receiveMessages(sqsClient) {
+export async function receiveMessages(sqsClient, queueUrl) {
   const response = await sqsClient.send(new ReceiveMessageCommand({
     MaxNumberOfMessages: 10,
-    WaitTimeSeconds: 5
+    WaitTimeSeconds: 5,
+    QueueUrl: queueUrl
   }));
 
   const messages = response.Messages;
@@ -22,7 +24,7 @@ export async function receiveMessages(sqsClient) {
   return [];
 }
 
-export async function deleteMessages(sqsClient, messagesReceiptHandles) {
+export async function deleteMessages(sqsClient, queueUrl, messagesReceiptHandles) {
   if(messagesReceiptHandles.length === 0) {
     return;
   }
@@ -38,7 +40,8 @@ export async function deleteMessages(sqsClient, messagesReceiptHandles) {
   });
 
   const response = await sqsClient.send(new DeleteMessageBatchCommand({
-    Entries: inputEntries
+    Entries: inputEntries,
+    QueueUrl: queueUrl
   }));
 
   if(response.Failed) {

@@ -7,20 +7,23 @@ function createSqsClient() {
 describe('sendMessage', () => {
   it('should build command correctly and call client', async () => {
     const sqsClient = createSqsClient();
+    const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
     const message = 'message';
 
-    await sendMessage(sqsClient, message);
+    await sendMessage(sqsClient, queueUrl, message);
 
     expect(sqsClient.send.mock.calls.length).toBe(1);
 
     const commandInput = sqsClient.send.mock.calls[0][0].input;
     expect(commandInput.MessageBody).toBe(message);
+    expect(commandInput.QueueUrl).toBe(queueUrl);
   });
 });
 
 describe('receiveMessages', () => {
   it('should build command correctly, call client and map messages returned', async () => {
     const sqsClient = createSqsClient();
+    const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
 
     const messages = [{
       Body: 'messageBody1',
@@ -36,11 +39,12 @@ describe('receiveMessages', () => {
       Messages: messages
     });
 
-    const returnedMessages = await receiveMessages(sqsClient);
+    const returnedMessages = await receiveMessages(sqsClient, queueUrl);
 
     expect(sqsClient.send.mock.calls.length).toBe(1);
 
     const commandInput = sqsClient.send.mock.calls[0][0].input;
+    expect(commandInput.QueueUrl).toBe(queueUrl);
     expect(commandInput.MaxNumberOfMessages).toBe(10);
     expect(commandInput.WaitTimeSeconds).toBe(5);
 
@@ -53,10 +57,11 @@ describe('receiveMessages', () => {
 
   it("should return empty array when response's Messages attribute undefined", async () => {
     const sqsClient = createSqsClient();
+    const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
 
     sqsClient.send.mockReturnValueOnce({});
 
-    const returnedMessages = await receiveMessages(sqsClient);
+    const returnedMessages = await receiveMessages(sqsClient, queueUrl);
 
     expect(sqsClient.send.mock.calls.length).toBe(1);
     expect(returnedMessages).toHaveLength(0);
@@ -66,24 +71,27 @@ describe('receiveMessages', () => {
 describe('deleteMessages', () => {
   it('should do nothing when empty array of messages receipt handles', async () => {
     const sqsClient = createSqsClient();
+    const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
 
-    await deleteMessages(sqsClient, []);
+    await deleteMessages(sqsClient, queueUrl, []);
 
     expect(sqsClient.send.mock.calls.length).toBe(0);
   });
 
   it('should build command correctly and call client', async () => {
     const sqsClient = createSqsClient();
+    const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
 
     sqsClient.send.mockReturnValueOnce({});
 
     const messagesReceiptHandles = [ 'receiptHandle1', 'receiptHandle2' ];
 
-    await deleteMessages(sqsClient, messagesReceiptHandles);
+    await deleteMessages(sqsClient, queueUrl, messagesReceiptHandles);
 
     expect(sqsClient.send.mock.calls.length).toBe(1);
 
     const commandInput = sqsClient.send.mock.calls[0][0].input;
+    expect(commandInput.QueueUrl).toEqual(queueUrl);
     expect(commandInput.Entries).toEqual([{
       Id: '0',
       ReceiptHandle: messagesReceiptHandles[0]
@@ -95,6 +103,7 @@ describe('deleteMessages', () => {
 
   it('should throw error when some batch entry fails', async () => {
     const sqsClient = createSqsClient();
+    const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
 
     sqsClient.send.mockReturnValueOnce({
       Failed: [{
@@ -103,7 +112,7 @@ describe('deleteMessages', () => {
       }]
     });
 
-    await expect(async () => await deleteMessages(sqsClient, [ 'receiptHandle1', 'receiptHandle2' ]))
+    await expect(async () => await deleteMessages(sqsClient, queueUrl, [ 'receiptHandle1', 'receiptHandle2' ]))
       .rejects.toThrow(Error);
   })
 });
