@@ -4,8 +4,8 @@ import { DEFAULT_AWS_REGION } from './constants';
 import { consumeLines } from './file-consumer';
 import { sendMessage } from './sqs';
 
-export default async ({ file, region = DEFAULT_AWS_REGION, queueUrl }) => {
-  const sqsClient = new SQSClient({ region });
+export default async ({ file, queueUrl }) => {
+  const sqsClient = new SQSClient();
   let totalMessagesSent = 0;
 
   const lineConsumer = async (line, lineNumber) => {
