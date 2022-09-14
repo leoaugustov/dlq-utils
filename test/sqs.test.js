@@ -5,18 +5,24 @@ function createSqsClient() {
 }
 
 describe('sendMessage', () => {
-  it('should build command correctly and call client', async () => {
+  it('should build command correctly, call client and return message ID', async () => {
     const sqsClient = createSqsClient();
     const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
     const message = 'message';
+    const messageId = '6cb083c5-c69b-49b6-9a78-f2ff95e07fa7';
 
-    await sendMessage(sqsClient, queueUrl, message);
+    sqsClient.send.mockReturnValueOnce({
+      MessageId: messageId
+    });
+
+    const returnedMessageId = await sendMessage(sqsClient, queueUrl, message);
 
     expect(sqsClient.send.mock.calls.length).toBe(1);
 
     const commandInput = sqsClient.send.mock.calls[0][0].input;
     expect(commandInput.MessageBody).toBe(message);
     expect(commandInput.QueueUrl).toBe(queueUrl);
+    expect(returnedMessageId).toBe(messageId);
   });
 });
 

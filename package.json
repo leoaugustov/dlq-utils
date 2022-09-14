@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.76.0",
+    "chalk": "^4.1.2",
     "commander": "^9.2.0",
     "n-readlines": "^1.0.1"
   },

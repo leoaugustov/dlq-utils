@@ -14,8 +14,11 @@ describe('consumeLines', () => {
 
     expect(lineConsumer.mock.calls.length).toBe(3);
     expect(lineConsumer.mock.calls[0][0]).toEqual('first line');
+    expect(lineConsumer.mock.calls[0][1]).toEqual(1);
     expect(lineConsumer.mock.calls[1][0]).toEqual('second line');
+    expect(lineConsumer.mock.calls[1][1]).toEqual(2);
     expect(lineConsumer.mock.calls[2][0]).toEqual('third line');
+    expect(lineConsumer.mock.calls[2][1]).toEqual(3);
   });
 
   it('should not call consumer when file is empty', async () => {

@@ -1,10 +1,11 @@
 import { SendMessageCommand, ReceiveMessageCommand, DeleteMessageBatchCommand } from '@aws-sdk/client-sqs';
 
 export async function sendMessage(sqsClient, queueUrl, message) {
-  sqsClient.send(new SendMessageCommand({
+  const response = await sqsClient.send(new SendMessageCommand({
     MessageBody: message,
     QueueUrl: queueUrl
   }));
+  return response.MessageId;
 }
 
 export async function receiveMessages(sqsClient, queueUrl) {
