@@ -56,6 +56,7 @@ describe('receiveMessages', () => {
 
     const expectedMessages = messages.map(m => ({
       body: m.Body,
+      id: m.MessageId,
       receiptHandle: m.ReceiptHandle
     }));
     expect(returnedMessages).toEqual(expectedMessages);

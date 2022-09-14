@@ -19,6 +19,7 @@ export async function receiveMessages(sqsClient, queueUrl) {
   if(messages) {
     return messages.map(m => ({
       body: m.Body,
+      id: m.MessageId,
       receiptHandle: m.ReceiptHandle
     }));
   }
