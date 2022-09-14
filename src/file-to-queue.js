@@ -1,6 +1,5 @@
 import logger from './logger';
 import { SQSClient } from '@aws-sdk/client-sqs';
-import { DEFAULT_AWS_REGION } from './constants';
 import { consumeLines } from './file-consumer';
 import { sendMessage } from './sqs';
 
