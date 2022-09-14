@@ -23,6 +23,7 @@
     "clearMocks": true
   },
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.170.0",
     "@aws-sdk/client-sqs": "^3.76.0",
     "chalk": "^4.1.2",
     "commander": "^9.2.0",
