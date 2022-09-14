@@ -3,15 +3,16 @@ import { receiveMessages, deleteMessages } from './sqs';
 export async function consumeMessages(sqsClient, queueUrl, messageConsumer) {
   let messages = [];
   do {
-    messages = receiveMessages(sqsClient, queueUrl);
+    messages = await receiveMessages(sqsClient, queueUrl);
 
     let messagesToDelete = [];
-    messages.forEach(message => {
-      if(messageConsumer(message)) {
+    for(const message of messages) {
+      if(await messageConsumer(message)) {
         messagesToDelete.push(message.receiptHandle);
       }
-    });
-    deleteMessages(sqsClient, queueUrl, messagesToDelete);
+    }
+
+    await deleteMessages(sqsClient, queueUrl, messagesToDelete);
     messagesToDelete = [];
-  }while(messages.length > 0);
+  } while(messages.length > 0);
 }
