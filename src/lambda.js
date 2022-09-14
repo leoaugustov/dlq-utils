@@ -7,8 +7,7 @@ export async function invokeFunction(lambdaClient, functionName, payload) {
   }));
 
   return {
-    statusCode: response.StatusCode,
     functionError: response.FunctionError,
-    payload: response.Payload
+    payload: new TextDecoder().decode(response.Payload)
   }
 }
