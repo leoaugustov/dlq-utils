@@ -1,11 +1,11 @@
 import chalk from "chalk";
 
 function info(message) {
-    console.log(chalk.white(message));
+  console.log(chalk.white(message));
 }
 
 function success(message) {
-    console.log(chalk.green(message));
+  console.log(chalk.green(message));
 }
 
 function error(message) {
@@ -21,9 +21,9 @@ function warning(message) {
 }
 
 export default {
-    info,
-    success,
-    error,
-    errorDetail,
-    warning
+  info,
+  success,
+  error,
+  errorDetail,
+  warning,
 };

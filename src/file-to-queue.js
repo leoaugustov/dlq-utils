@@ -1,7 +1,7 @@
-import logger from './logger';
-import { SQSClient } from '@aws-sdk/client-sqs';
-import { consumeLines } from './file-consumer';
-import { sendMessage } from './sqs';
+import logger from "./logger";
+import { SQSClient } from "@aws-sdk/client-sqs";
+import { consumeLines } from "./file-consumer";
+import { sendMessage } from "./sqs";
 
 export default async ({ file, queueUrl }) => {
   const sqsClient = new SQSClient();
@@ -15,4 +15,4 @@ export default async ({ file, queueUrl }) => {
 
   await consumeLines(file, lineConsumer);
   logger.success(`Finished file-to-queue successfully. ${totalMessagesSent} messages sent`);
-}
+};
