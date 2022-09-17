@@ -23,4 +23,4 @@ jobs:
         node-version: '16'
     - name: "unit testing"
       run: |
-        npm ci && npm run lint
+        npm ci && npm test
