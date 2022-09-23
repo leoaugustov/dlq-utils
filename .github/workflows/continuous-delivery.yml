@@ -11,7 +11,7 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+      uses: actions/setup-node@v3
       with:
         node-version: '16'
     - name: "build project"
@@ -22,11 +22,10 @@ jobs:
       run: npm run release
 
     - name: "create tar file"
-      run: |
-        cd artifacts && tar -czf dlq-utils-macos-amd64.tar.gz dlq-utils
+      run: cd artifacts && tar -czf dlq-utils-macos-amd64.tar.gz dlq-utils
 
     - name: "upload release assets"
-    - uses: AButler/upload-release-assets@v2.0
+      uses: AButler/upload-release-assets@v2.0
       with:
         files: "artifacts/*"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +37,7 @@ jobs:
       contents: read
     steps:
     - name: "release to homebrew"
-    - uses: Justintime50/homebrew-releaser@v1
+      uses: Justintime50/homebrew-releaser@v1
       with:
         formula_folder: Formula
         homebrew_owner: leoaugustov
