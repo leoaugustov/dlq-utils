@@ -15,13 +15,11 @@ jobs:
       with:
         node-version: '16'
     - name: "build project"
-      run: |
-        npm ci && npm run build
+      run: npm ci && npm run build
     - name: "create binary executable"
       run: npm run release
     - name: "create tar file"
-      run: |
-        cd artifacts && tar -czf dlq-utils-macos-amd64.tar.gz dlq-utils
+      run: cd artifacts && tar -czf dlq-utils-macos-amd64.tar.gz dlq-utils
     - uses: AButler/upload-release-assets@v2.0
       with:
         files: "artifacts/*"
