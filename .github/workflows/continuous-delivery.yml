@@ -1,0 +1,46 @@
+name: CD - Continuous Delivery
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  generate-executables:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: "build project"
+      run: |
+        npm ci && npm run build
+    - name: "create binary executable"
+      run: npm run release
+    - name: "create tar file"
+      run: |
+        cd artifacts && tar -czf dlq-utils-macos-amd64.tar.gz dlq-utils
+    - uses: AButler/upload-release-assets@v2.0
+      with:
+        files: "artifacts/*"
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: "upload release assets"
+  deploy-macos:
+    runs-on: ubuntu-latest
+    needs: generate-executables
+    permissions:
+      contents: read
+    steps:
+    - uses: Justintime50/homebrew-releaser@v1
+      with:
+        formula_folder: Formula
+        homebrew_owner: leoaugustov
+        target_macos_amd64: true
+        homebrew_tap: homebrew-dlq-utils
+        install: 'bin.install "dlq-utils"'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        skip_commit: true
+        debug: true
+    - name: "release to homebrew"
