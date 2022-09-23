@@ -1,11 +1,12 @@
 {
   "name": "dlq-utils",
   "version": "1.0.0",
-  "description": "A CLI to help with DLQ messages processing",
+  "description": "A CLI to help with DLQ message processing",
   "scripts": {
     "test": "jest",
     "build": "rm -rf dist && babel src -d dist",
-    "lint": "eslint './src/**/*.js'"
+    "lint": "eslint './src/**/*.js'",
+    "release": "pkg package.json"
   },
   "bin": "./dist/index.js",
   "keywords": [
@@ -16,6 +17,12 @@
   ],
   "author": "leoaugustov",
   "license": "MIT",
+  "pkg": {
+    "targets": [
+      "node14-macos-x64"
+    ],
+    "outputPath": "artifacts"
+  },
   "jest": {
     "transformIgnorePatterns": [
       "/node_modules/(?!(tempy|unique-string|crypto-random-string|is-stream)/)"
@@ -40,6 +47,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^27.5.1",
+    "pkg": "^5.8.0",
     "prettier": "2.6.2",
     "tempy": "^3.0.0"
   }
