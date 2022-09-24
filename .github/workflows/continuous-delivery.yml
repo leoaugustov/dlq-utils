@@ -25,14 +25,23 @@ jobs:
     - name: "create binary executable"
       run: npm run release
 
+    - name: "extract version from tag"
+      id: extract-version-from-tag
+      uses: mad9000/actions-find-and-replace-string@2
+      with:
+        source: ${{ github.ref_name }}
+        find: 'v'
+        replace: ''
+
     - name: "create tar file"
-      run: cd artifacts && tar -czf dlq-utils-macos-amd64.tar.gz dlq-utils
+      run: cd artifacts && tar -czf dlq-utils-${{ steps.extract-version-from-tag.outputs.value }}-darwin-amd64.tar.gz dlq-utils
 
     - name: "upload release assets"
       uses: AButler/upload-release-assets@v2.0
       with:
         files: "artifacts/*"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+        release-tag: ${{ github.ref_name }}
 
   deploy-macos:
     runs-on: ubuntu-latest
@@ -45,7 +54,7 @@ jobs:
       with:
         formula_folder: Formula
         homebrew_owner: leoaugustov
-        target_macos_amd64: true
+        target_darwin_amd64: true
         homebrew_tap: homebrew-dlq-utils
         install: 'bin.install "dlq-utils"'
         github_token: ${{ secrets.GITHUB_TOKEN }}
