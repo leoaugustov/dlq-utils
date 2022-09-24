@@ -3,8 +3,8 @@ import { SQSClient } from "@aws-sdk/client-sqs";
 import { consumeLines } from "./file-consumer";
 import { sendMessage } from "./sqs";
 
-export default async ({ file, queueUrl }) => {
-  const sqsClient = new SQSClient();
+export default async ({ file, queueUrl, endpointUrl: endpoint }) => {
+  const sqsClient = new SQSClient({ endpoint });
   let totalMessagesSent = 0;
 
   const lineConsumer = async (line, lineNumber) => {

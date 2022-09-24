@@ -4,9 +4,9 @@ import { LambdaClient } from "@aws-sdk/client-lambda";
 import { invokeFunction } from "./lambda";
 import { consumeMessages } from "./sqs-consumer";
 
-export default async ({ queueUrl, functionName }) => {
-  const sqsClient = new SQSClient();
-  const lambdaClient = new LambdaClient();
+export default async ({ queueUrl, functionName, endpointUrl: endpoint }) => {
+  const sqsClient = new SQSClient({ endpoint });
+  const lambdaClient = new LambdaClient({ endpoint });
   let totalMessagesProcessed = 0;
   let invocationFailures = 0;
 
