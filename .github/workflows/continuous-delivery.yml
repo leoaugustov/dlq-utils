@@ -63,5 +63,4 @@ jobs:
         homebrew_tap: homebrew-dlq-utils
         install: 'bin.install "dlq-utils"'
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        skip_commit: true
         debug: true
