@@ -19,7 +19,8 @@
   "license": "MIT",
   "pkg": {
     "targets": [
-      "node14-macos-x64"
+      "node14-macos-x64",
+      "node14-linux-x64"
     ],
     "outputPath": "artifacts"
   },
