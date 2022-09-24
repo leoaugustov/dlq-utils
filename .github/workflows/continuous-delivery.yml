@@ -34,7 +34,10 @@ jobs:
         replace: ''
 
     - name: "create tar file"
-      run: cd artifacts && tar -czf dlq-utils-${{ steps.extract-version-from-tag.outputs.value }}-darwin-amd64.tar.gz dlq-utils
+      run: |
+        cd artifacts \
+        && tar -czf dlq-utils-${{ steps.extract-version-from-tag.outputs.value }}-darwin-amd64.tar.gz dlq-utils \
+        && rm dlq-utils
 
     - name: "upload release assets"
       uses: AButler/upload-release-assets@v2.0
