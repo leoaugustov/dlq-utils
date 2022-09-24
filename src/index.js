@@ -14,6 +14,10 @@ program
     "The full name of the text file to read line by line. Blank lines will be skipped"
   )
   .requiredOption("-q --queue-url <string>", "The URL of the queue to which messages should be sent")
+  .option(
+    "--endpoint-url <string>",
+    "Just like in aws-cli commands, this is only required when using a local version of SQS"
+  )
   .action(fileToQueue);
 
 program
@@ -21,6 +25,10 @@ program
   .description("Consume all messages from a queue to invoke an AWS Lambda function with each one")
   .requiredOption("-f --function-name <string>", "The Lambda function name")
   .requiredOption("-q --queue-url <string>", "The URL of the queue to which messages should be sent")
+  .option(
+    "--endpoint-url <string>",
+    "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
+  )
   .action(queueToLambda);
 
 program.parse();
