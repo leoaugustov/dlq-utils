@@ -15,6 +15,11 @@ AWS_PROFILE=configured-profile dlq-utils queue-to-lambda --queue-url "https://sq
 AWS_PROFILE=configured-profile dlq-utils file-to-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --file "/Users/myuser/Documents/some-file.txt"
 ```
 
+`queue-to-queue`:
+```shell
+AWS_PROFILE=configured-profile dlq-utils queue-to-queue --source-queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/source-queue" --dest-queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/dest-queue"
+```
+
 ## Running locally
 
 Clone this repository and install the project dependencies. Then build the project:
@@ -28,7 +33,7 @@ Next, you need to run the command below inside the repository folder to globally
 npm link
 ```
 
-After that, every time you make a change in the code base you need to rebuild the project to reload update the CLI behavior.
+After that, every time you make a change in the code base you need to rebuild the project to update the CLI behavior.
 
 ## Roadmap
 
