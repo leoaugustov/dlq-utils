@@ -11,10 +11,10 @@ program
   .command("file-to-queue")
   .description("Read a text file to send each line as a message to an Amazon SQS queue")
   .requiredOption(
-    "-f --file <string>",
+    "-s --file <string>",
     "The full name of the text file to read line by line. Blank lines will be skipped"
   )
-  .requiredOption("-q --queue-url <string>", "The URL of the queue to which messages should be sent")
+  .requiredOption("-d --queue-url <string>", "The URL of the queue to which messages should be sent")
   .option(
     "--endpoint-url <string>",
     "Just like in aws-cli commands, this is only required when using a local version of SQS"
@@ -24,8 +24,8 @@ program
 program
   .command("queue-to-lambda")
   .description("Consume all messages from a queue to invoke an AWS Lambda function with each one")
-  .requiredOption("-f --function-name <string>", "The Lambda function name")
-  .requiredOption("-q --queue-url <string>", "The URL of the queue to which messages should be sent")
+  .requiredOption("-s --queue-url <string>", "The URL of the queue to which messages should be sent")
+  .requiredOption("-d --function-name <string>", "The Lambda function name")
   .option(
     "--endpoint-url <string>",
     "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
