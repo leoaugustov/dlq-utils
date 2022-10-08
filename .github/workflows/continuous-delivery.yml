@@ -61,6 +61,6 @@ jobs:
         target_darwin_amd64: true
         target_linux_amd64: true
         homebrew_tap: homebrew-dlq-utils
-        install: 'bin.install File.basename(Dir.glob("#{prefix}/bin/dlq-utils*").first) => "dlq-utils"'
+        install: 'bin.install File.basename(Dir.glob "#{prefix}/bin/dlq-utils*") => "dlq-utils"'
         github_token: ${{ secrets.HOMEBREW_TAP_GITHUB_PAT }}
         debug: true
