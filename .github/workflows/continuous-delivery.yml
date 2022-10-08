@@ -22,7 +22,7 @@ jobs:
       run: |
         npm ci && npm run build
 
-    - name: "create binary executable"
+    - name: "create binary executables"
       run: npm run release
 
     - name: "extract version from tag"
@@ -33,12 +33,11 @@ jobs:
         find: 'v'
         replace: ''
 
-    - name: "create tar file"
+    - name: "rename files"
       run: |
         cd artifacts \
         && mv dlq-utils-macos dlq-utils-${{ steps.extract-version.outputs.value }}-darwin-amd64 \
-        && mv dlq-utils-linux dlq-utils-${{ steps.extract-version.outputs.value }}-linux-amd64 \
-        && rm dlq-utils-macos dlq-utils-linux
+        && mv dlq-utils-linux dlq-utils-${{ steps.extract-version.outputs.value }}-linux-amd64
 
     - name: "upload release assets"
       uses: AButler/upload-release-assets@v2.0
