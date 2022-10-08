@@ -50,8 +50,6 @@ jobs:
   deploy-homebrew:
     runs-on: ubuntu-latest
     needs: generate-executables
-    permissions:
-      contents: write
     steps:
     - name: "release to homebrew"
       uses: Justintime50/homebrew-releaser@v1
@@ -64,5 +62,5 @@ jobs:
         target_linux_amd64: true
         homebrew_tap: homebrew-dlq-utils
         install: 'bin.install "dlq-utils"'
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.HOMEBREW_TAP_GITHUB_PAT }}
         debug: true
