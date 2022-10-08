@@ -58,6 +58,8 @@ jobs:
       with:
         formula_folder: Formula
         homebrew_owner: leoaugustov
+        commit_owner: leoaugustov
+        commit_email: vieira.augustoleonardo@gmail.com
         target_darwin_amd64: true
         target_linux_amd64: true
         homebrew_tap: homebrew-dlq-utils
