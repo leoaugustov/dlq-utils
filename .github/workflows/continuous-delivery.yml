@@ -33,11 +33,14 @@ jobs:
         find: 'v'
         replace: ''
 
-    - name: "rename files"
+    - name: "create tar files"
       run: |
         cd artifacts \
-        && mv dlq-utils-macos dlq-utils-${{ steps.extract-version.outputs.value }}-darwin-amd64 \
-        && mv dlq-utils-linux dlq-utils-${{ steps.extract-version.outputs.value }}-linux-amd64
+        && mv dlq-utils-macos dlq-utils \
+        && tar -czf dlq-utils-${{ steps.extract-version.outputs.value }}-darwin-amd64.tar.gz dlq-utils \
+        && mv dlq-utils-linux dlq-utils \
+        && tar -czf dlq-utils-${{ steps.extract-version.outputs.value }}-linux-amd64.tar.gz dlq-utils \
+        && rm dlq-utils
 
     - name: "upload release assets"
       uses: AButler/upload-release-assets@v2.0
@@ -60,6 +63,6 @@ jobs:
         target_darwin_amd64: true
         target_linux_amd64: true
         homebrew_tap: homebrew-dlq-utils
-        install: 'bin.install File.basename(Dir.glob "dlq-utils*") => "dlq-utils"'
+        install: 'bin.install "dlq-utils"'
         github_token: ${{ secrets.HOMEBREW_TAP_GITHUB_PAT }}
         debug: true
