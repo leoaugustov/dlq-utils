@@ -1,6 +1,6 @@
 # dlq-utils
 
-A CLI with a some commands that help with DLQ message processing. Built with Node.js and currently only working with AWS components.
+A CLI with some commands that help with DLQ message processing. Built with Node.js and currently only working with AWS components.
 
 ## Installation (Homebrew only)
 ```shell
