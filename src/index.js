@@ -32,8 +32,8 @@ program
   )
   .option(
     "--template <string>",
-    "A template to interpolate the messages before invoking the function. "
-      + "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
+    "A template to interpolate the messages before invoking the function. " +
+      "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
   )
   .action(queueToLambda);
 
@@ -48,8 +48,8 @@ program
   )
   .option(
     "--template <string>",
-    "A template to interpolate the messages before sending them to the queue. "
-      + "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
+    "A template to interpolate the messages before sending them to the queue. " +
+      "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
   )
   .action(queueToQueue);
 
