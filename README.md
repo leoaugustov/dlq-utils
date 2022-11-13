@@ -46,6 +46,5 @@ After that, every time you make a change in the code base you need to rebuild th
 
 Here you will find a list of features I want to include in the project:
 
-- ✨ Improve commands by adding the ability to transform messages using a template
 - ✨ Improve commands by adding the ability to filter messages
 - 🔧 Add hot reload to automatically rebuild the project and improve the development experience

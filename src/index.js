@@ -30,6 +30,11 @@ program
     "--endpoint-url <string>",
     "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
   )
+  .option(
+    "--template <string>",
+    "A template to interpolate the messages before invoking the function. "
+      + "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
+  )
   .action(queueToLambda);
 
 program
@@ -40,6 +45,11 @@ program
   .option(
     "--endpoint-url <string>",
     "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
+  )
+  .option(
+    "--template <string>",
+    "A template to interpolate the messages before sending them to the queue. "
+      + "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
   )
   .action(queueToQueue);
 
