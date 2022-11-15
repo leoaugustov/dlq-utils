@@ -11,17 +11,23 @@ brew install dlq-utils
 ## Usage
 It's necessary to specify the environment variable `AWS_PROFILE` with the [named profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) to use before executing a command.
 
-`queue-to-lambda`:
+#### `queue-to-lambda`
+Invoke an AWS Lambda function with all messages from an Amazon SQS queue, being able to transform them before invoking the function.
+
 ```shell
 AWS_PROFILE=configured-profile dlq-utils queue-to-lambda --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --function-name "some-lambda-function"
 ```
 
-`file-to-queue`:
+#### `file-to-queue`
+Read a text file to send each line as a message to an Amazon SQS queue.
+
 ```shell
 AWS_PROFILE=configured-profile dlq-utils file-to-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --file "/Users/myuser/Documents/some-file.txt"
 ```
 
-`queue-to-queue`:
+#### `queue-to-queue`
+Move all messages from an Amazon SQS queue to another one, being able to transform them.
+
 ```shell
 AWS_PROFILE=configured-profile dlq-utils queue-to-queue --source-queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/source-queue" --dest-queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/dest-queue"
 ```
