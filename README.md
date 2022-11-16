@@ -1,5 +1,7 @@
 # dlq-utils
 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/leoaugustov/dlq-utils/blob/main/LICENSE)
+
 A CLI with some commands that help with DLQ message processing. Built with Node.js and currently only working with AWS components.
 
 ## Installation (Homebrew only)
