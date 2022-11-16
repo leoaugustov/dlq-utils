@@ -40,10 +40,10 @@ Clone this repository and install the project dependencies. Then build the proje
 ```shell
 npm run build
 ```
-Next, you need to run the command below inside the repository folder to globally link it with the command `dlq-utils`:
+Next, you need to run the command below inside the repository folder to locally link it with the command `npx dlq-utils`:
 
 ```shell
-npm link
+npx link .
 ```
 
 After that, every time you make a change in the code base you need to rebuild the project to update the CLI behavior.
