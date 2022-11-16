@@ -3,8 +3,9 @@ import { SQSClient } from "@aws-sdk/client-sqs";
 import { LambdaClient } from "@aws-sdk/client-lambda";
 import { invokeFunction } from "./lambda";
 import { consumeMessages } from "./sqs-consumer";
+import messageTemplater from "./message-templater";
 
-export default async ({ queueUrl, functionName, endpointUrl: endpoint }) => {
+export default async ({ queueUrl, functionName, endpointUrl: endpoint, template }) => {
   const sqsClient = new SQSClient({ endpoint });
   const lambdaClient = new LambdaClient({ endpoint });
   let totalMessagesProcessed = 0;
@@ -12,7 +13,8 @@ export default async ({ queueUrl, functionName, endpointUrl: endpoint }) => {
 
   const messageConsumer = async (message) => {
     totalMessagesProcessed++;
-    const response = await invokeFunction(lambdaClient, functionName, message.body);
+    const payload = template ? messageTemplater.applyTemplate(message.body, template) : message.body;
+    const response = await invokeFunction(lambdaClient, functionName, payload);
 
     if (response.functionError) {
       invocationFailures++;

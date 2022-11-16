@@ -70,3 +70,25 @@ it('should create consumer to return false when invocation response has function
   const shouldDeleteMessage = await consumeMessages.mock.calls[0][2]({ body: 'some message' });
   expect(shouldDeleteMessage).toBe(false);
 });
+
+it('should apply the template to message body when it exists', async () => {
+  const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
+  const functionName = 'function-name';
+  const template = '{ "someArray": [ *msg* ] }';
+
+  invokeFunction.mockReturnValueOnce({});
+
+  await queueToLambda({ queueUrl, functionName, template });
+
+  expect(consumeMessages.mock.calls.length).toBe(1);
+
+  const message = {
+    body: '{ "field": "value" }',
+    id: '1231124',
+    receiptHandle: 'receipt-handle'
+  };
+  await consumeMessages.mock.calls[0][2](message);
+
+  const invocationPayload = invokeFunction.mock.calls[0][2];
+  expect(invocationPayload).toBe('{ "someArray": [ { "field": "value" } ] }');
+});

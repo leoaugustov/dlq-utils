@@ -6,7 +6,7 @@ jest.mock('../src/sqs-consumer', () => ({
   consumeMessages: jest.fn()
 }));
 jest.mock('../src/sqs', () => ({
-    sendMessage: jest.fn()
+  sendMessage: jest.fn()
 }));
 
 it('should consume messages from source queue and send them to dest queue', async () => {
@@ -22,7 +22,7 @@ it('should consume messages from source queue and send them to dest queue', asyn
   const message = { body: 'some message' };
   await consumeMessages.mock.calls[0][2](message);
 
-  expect(sendMessage).toBeCalledWith(expect.any(SQSClient), destQueueUrl, message);
+  expect(sendMessage).toBeCalledWith(expect.any(SQSClient), destQueueUrl, message.body);
 
   const createdSqsClient = sendMessage.mock.calls[0][0];
   const resolvedEndpoint = await createdSqsClient.config.endpoint();
@@ -30,4 +30,20 @@ it('should consume messages from source queue and send them to dest queue', asyn
   expect(resolvedEndpoint.protocol).toBe('http:');
   expect(resolvedEndpoint.hostname).toBe('localhost');
   expect(resolvedEndpoint.port).toBe(4566);
+});
+
+it('should apply the template to message body when it exists', async () => {
+  const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
+  const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
+  const template = '{ "someArray": [ *msg* ] }';
+
+  await queueToQueue({ sourceQueueUrl, destQueueUrl, template });
+
+  expect(consumeMessages.mock.calls.length).toBe(1);
+
+  const message = { body: '{ "field": "value" }' };
+  await consumeMessages.mock.calls[0][2](message);
+
+  const messageSent = sendMessage.mock.calls[0][2];
+  expect(messageSent).toBe('{ "someArray": [ { "field": "value" } ] }');
 });
