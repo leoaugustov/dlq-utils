@@ -22,7 +22,7 @@ it('should consume messages from source queue and send them to dest queue', asyn
   const message = { body: 'some message' };
   await consumeMessages.mock.calls[0][2](message);
 
-  expect(sendMessage).toBeCalledWith(expect.any(SQSClient), destQueueUrl, message);
+  expect(sendMessage).toBeCalledWith(expect.any(SQSClient), destQueueUrl, message.body);
 
   const createdSqsClient = sendMessage.mock.calls[0][0];
   const resolvedEndpoint = await createdSqsClient.config.endpoint();
@@ -41,15 +41,9 @@ it('should apply the template to message body when it exists', async () => {
 
   expect(consumeMessages.mock.calls.length).toBe(1);
 
-  const message = {
-    body: '{ "field": "value" }',
-    id: '1231124',
-    receiptHandle: 'receipt-handle'
-  };
+  const message = { body: '{ "field": "value" }' };
   await consumeMessages.mock.calls[0][2](message);
 
   const messageSent = sendMessage.mock.calls[0][2];
-  expect(messageSent.body).toBe('{ "someArray": [ { "field": "value" } ] }');
-  expect(messageSent.id).toBe(message.id);
-  expect(messageSent.receiptHandle).toBe(message.receiptHandle);
+  expect(messageSent).toBe('{ "someArray": [ { "field": "value" } ] }');
 });

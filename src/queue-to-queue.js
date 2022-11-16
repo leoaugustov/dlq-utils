@@ -10,10 +10,11 @@ export default async ({ sourceQueueUrl, destQueueUrl, endpointUrl: endpoint, tem
 
   const messageConsumer = async (message) => {
     totalMessagesMoved++;
+    let messageBody = message.body;
     if (template) {
-      message.body = messageTemplater.applyTemplate(message.body, template);
+      messageBody = messageTemplater.applyTemplate(messageBody, template);
     }
-    await sendMessage(sqsClient, destQueueUrl, message);
+    await sendMessage(sqsClient, destQueueUrl, messageBody);
   };
 
   await consumeMessages(sqsClient, sourceQueueUrl, messageConsumer);
