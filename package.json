@@ -24,13 +24,6 @@
     ],
     "outputPath": "artifacts"
   },
-  "jest": {
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(tempy|unique-string|crypto-random-string|is-stream)/)"
-    ],
-    "verbose": true,
-    "clearMocks": true
-  },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.170.0",
     "@aws-sdk/client-sqs": "^3.76.0",
@@ -50,6 +43,7 @@
     "jest": "^27.5.1",
     "pkg": "^5.8.0",
     "prettier": "2.6.2",
-    "tempy": "^3.0.0"
+    "tempy": "^3.0.0",
+    "testcontainers": "^9.0.0"
   }
 }
