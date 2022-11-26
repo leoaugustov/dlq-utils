@@ -29,7 +29,16 @@ it('should consume messages from source queue and send them to dest queue', asyn
   await sendMessage(sqsClient, SOURCE_QUEUE_NAME, 'message-3');
   await sendMessage(sqsClient, SOURCE_QUEUE_NAME, 'message-4');
 
-  // queueToQueue({
+  var sourceQueueUrl = getQueueUrl(SOURCE_QUEUE_NAME);
+  var destQueueUrl = getQueueUrl(DEST_QUEUE_NAME);
+  await queueToQueue({
+    sourceQueueUrl,
+    destQueueUrl,
+    endpointUrl: SQS_ENDPOINT_URL
+  });
 
-  // });
+  const messagesFound = await receiveMessages(sqsClient, DEST_QUEUE_NAME);
+
+  expect(messagesFound.map(message => message.body))
+    .toContain('message-1', 'message-2', 'message-3', 'message-4');
 });
