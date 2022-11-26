@@ -11,10 +11,16 @@ const createProject = (type) => {
   };
 
   if (type === INTEGRATION_TESTS_TYPE) {
-    config.setupFilesAfterEnv = ["<rootDir>/test/integration/utils/helpers.js"];
+    config.setupFilesAfterEnv = [
+      "jest-extended/all",
+      "<rootDir>/test/integration/utils/helpers.js"
+    ];
     config.testRegex = "/integration/";
     config.testPathIgnorePatterns = ["/integration/utils"];
   } else {
+    config.setupFilesAfterEnv = [
+      "jest-extended/all"
+    ];
     config.testPathIgnorePatterns = ["/integration/"];
   }
   return config;

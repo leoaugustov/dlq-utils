@@ -40,5 +40,5 @@ it('should consume messages from source queue and send them to dest queue', asyn
   const messagesFound = await receiveMessages(sqsClient, DEST_QUEUE_NAME);
 
   expect(messagesFound.map(message => message.body))
-    .toContain('message-1', 'message-2', 'message-3', 'message-4');
+    .toIncludeSameMembers(['message-1', 'message-2', 'message-3', 'message-4']);
 });
