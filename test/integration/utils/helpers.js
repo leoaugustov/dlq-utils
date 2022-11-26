@@ -15,6 +15,7 @@ global.getQueueUrl = getQueueUrl;
 global.setUpSqsService = async () => {
   process.env['AWS_ACCESS_KEY_ID'] = "AKIAIOSFODNN7EXAMPLE";
   process.env['AWS_SECRET_ACCESS_KEY'] = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY";
+  process.env['AWS_DEFAULT_REGION'] = "us-west-2";
 
   const sqsContainer = await new GenericContainer("roribio16/alpine-sqs:1.2.0")
     .withExposedPorts(9324, 9325)
