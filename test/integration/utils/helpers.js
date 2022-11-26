@@ -24,7 +24,10 @@ global.setUpSqsService = async () => {
 };
 
 global.createSqsClient = () => {
-  return new SQSClient({ endpoint: sqsEndpointUrl });
+  return new SQSClient({
+    endpoint: sqsEndpointUrl,
+    region: "us-east-1"
+  });
 };
 
 global.createQueue = async (sqsClient, queueName) => {
