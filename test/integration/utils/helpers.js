@@ -1,6 +1,6 @@
 import { GenericContainer } from "testcontainers";
 import { SQSClient, CreateQueueCommand, DeleteMessageBatchCommand } from "@aws-sdk/client-sqs";
-import { sendMessage, receiveMessages } from '../../../src/sqs';
+import { sendMessage, receiveMessages } from "../../../src/sqs";
 
 jest.setTimeout(30000); // testTimeout does not work with profiles
 
@@ -13,6 +13,10 @@ function getQueueUrl(queueName) {
 global.getQueueUrl = getQueueUrl;
 
 global.setUpSqsService = async () => {
+  process.env['AWS_ACCESS_KEY_ID'] = "AKIAIOSFODNN7EXAMPLE";
+  process.env['AWS_SECRET_ACCESS_KEY'] = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY";
+  process.env['AWS_DEFAULT_REGION'] = "us-west-2";
+
   const sqsContainer = await new GenericContainer("roribio16/alpine-sqs:1.2.0")
     .withExposedPorts(9324, 9325)
     .start();
@@ -24,10 +28,7 @@ global.setUpSqsService = async () => {
 };
 
 global.createSqsClient = () => {
-  return new SQSClient({
-    endpoint: sqsEndpointUrl,
-    region: "us-east-1"
-  });
+  return new SQSClient({ endpoint: sqsEndpointUrl });
 };
 
 global.createQueue = async (sqsClient, queueName) => {
