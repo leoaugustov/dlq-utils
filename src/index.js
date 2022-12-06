@@ -28,10 +28,7 @@ program
     "Consume all messages from a queue (without deleting) to save them in a text file. " +
       "If the file already exists it will be overwritten"
   )
-  .requiredOption(
-    "-s --file <string>",
-    "The full name of the text file where the messages should be saved"
-  )
+  .requiredOption("-s --file <string>", "The full name of the text file where the messages should be saved")
   .requiredOption("-d --queue-url <string>", "The URL of the queue that contains the messages")
   .option(
     "--endpoint-url <string>",
