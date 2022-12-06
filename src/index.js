@@ -2,6 +2,7 @@
 
 import { Command } from "commander";
 import fileToQueue from "./file-to-queue";
+import queueToFile from "./queue-to-file";
 import queueToLambda from "./queue-to-lambda";
 import queueToQueue from "./queue-to-queue";
 
@@ -22,9 +23,29 @@ program
   .action(fileToQueue);
 
 program
+  .command("queue-to-file")
+  .description(
+    "Consume all messages from a queue (without deleting) to save them in a text file. " +
+      "If the file already exists it will be overwritten"
+  )
+  .requiredOption(
+    "-s --file <string>",
+    "The full name of the text file where the messages should be saved"
+  )
+  .requiredOption("-d --queue-url <string>", "The URL of the queue that contains the messages")
+  .option(
+    "--endpoint-url <string>",
+    "Just like in aws-cli commands, this is only required when using a local version of SQS"
+  )
+  .action(queueToFile);
+
+program
   .command("queue-to-lambda")
-  .description("Consume all messages from a queue to invoke an AWS Lambda function with each one")
-  .requiredOption("-s --queue-url <string>", "The URL of the queue to which messages should be sent")
+  .description(
+    "Consume all messages from a queue to invoke an AWS Lambda function with each one. " +
+      "A message will be deleted from the queue if function invocation succeeds"
+  )
+  .requiredOption("-s --queue-url <string>", "The URL of the queue that contains the messages")
   .requiredOption("-d --function-name <string>", "The Lambda function name")
   .option(
     "--endpoint-url <string>",
