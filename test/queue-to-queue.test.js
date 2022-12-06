@@ -47,3 +47,15 @@ it('should apply the template to message body when it exists', async () => {
   const messageSent = sendMessage.mock.calls[0][2];
   expect(messageSent).toBe('{ "someArray": [ { "field": "value" } ] }');
 });
+
+it('should create consumer that returns true', async () => {
+  const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
+  const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
+
+  await queueToQueue({ sourceQueueUrl, destQueueUrl });
+
+  expect(consumeMessages.mock.calls.length).toBe(1);
+
+  const shouldDeleteMessage = await consumeMessages.mock.calls[0][2]({ body: 'some message' });
+  expect(shouldDeleteMessage).toBe(true);
+});
