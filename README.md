@@ -28,6 +28,13 @@ Read a text file to send each line as a message to an Amazon SQS queue.
 AWS_PROFILE=configured-profile dlq-utils file-to-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --file "/Users/myuser/Documents/some-file.txt"
 ```
 
+#### `queue-to-file`
+Consume all messages from a queue to save them in a text file.
+
+```shell
+AWS_PROFILE=configured-profile dlq-utils queue-to-file --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --file "/Users/myuser/Documents/some-file.txt"
+```
+
 #### `queue-to-queue`
 Move all messages from an Amazon SQS queue to another one, being able to transform them.
 
@@ -60,4 +67,5 @@ Here you will find a list of features I want to include in the project:
 - ✨ Add command queue-to-file
 - ✨ Improve commands by adding the ability to filter out messages with a regex
 - 🦺 Add validation for better feedback when some resource (e.g. file, queue or function) does not exist
+- 🔧 Add tooling to facilitate local testing
 - 🔧 Add hot reload to automatically rebuild the project and improve the development experience
