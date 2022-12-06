@@ -22,7 +22,7 @@ afterAll(async () => {
   await sqsContainer.stop();
 });
 
-it('should consume messages from queue (without deleting) and save them in file', async () => {
+it('should consume messages from queue and save them in file', async () => {
   const queueUrl = getQueueUrl(QUEUE_NAME);
   const fileName = temporaryFile();
   const messages = ['message-1', 'message-2', 'message-3', 'message-4'];
