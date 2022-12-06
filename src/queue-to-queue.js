@@ -15,6 +15,7 @@ export default async ({ sourceQueueUrl, destQueueUrl, endpointUrl: endpoint, tem
       messageBody = messageTemplater.applyTemplate(messageBody, template);
     }
     await sendMessage(sqsClient, destQueueUrl, messageBody);
+    return true;
   };
 
   await consumeMessages(sqsClient, sourceQueueUrl, messageConsumer);
