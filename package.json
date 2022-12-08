@@ -18,6 +18,7 @@
   "author": "leoaugustov",
   "license": "MIT",
   "pkg": {
+    "assets": "dist/.version",
     "targets": [
       "node14-macos-x64",
       "node14-linux-x64"
