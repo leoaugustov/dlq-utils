@@ -6,9 +6,16 @@
 A CLI with some commands that help with DLQ message processing. Built with Node.js and currently only working with AWS components.
 
 ## Installation (Homebrew only)
+To install the latest version:
 ```shell
 brew tap leoagustov/homebrew-dlq-utils
 brew install dlq-utils
+```
+
+To update to the latest version:
+```shell
+brew update
+brew upgrade dlq-utils
 ```
 
 ## Usage
