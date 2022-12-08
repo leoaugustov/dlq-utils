@@ -9,6 +9,25 @@ import queueToQueue from "./queue-to-queue";
 const program = new Command();
 
 program
+  .command("queue-to-lambda")
+  .description(
+    "Consume all messages from a queue to invoke an AWS Lambda function with each one. " +
+      "A message will be deleted from the queue if function invocation succeeds"
+  )
+  .requiredOption("-s --queue-url <string>", "The URL of the queue that contains the messages")
+  .requiredOption("-d --function-name <string>", "The Lambda function name")
+  .option(
+    "--endpoint-url <string>",
+    "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
+  )
+  .option(
+    "--template <string>",
+    "A template to interpolate the messages before invoking the function. " +
+      "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
+  )
+  .action(queueToLambda);
+
+program
   .command("file-to-queue")
   .description("Read a text file to send each line as a message to an Amazon SQS queue")
   .requiredOption(
@@ -35,25 +54,6 @@ program
     "Just like in aws-cli commands, this is only required when using a local version of SQS"
   )
   .action(queueToFile);
-
-program
-  .command("queue-to-lambda")
-  .description(
-    "Consume all messages from a queue to invoke an AWS Lambda function with each one. " +
-      "A message will be deleted from the queue if function invocation succeeds"
-  )
-  .requiredOption("-s --queue-url <string>", "The URL of the queue that contains the messages")
-  .requiredOption("-d --function-name <string>", "The Lambda function name")
-  .option(
-    "--endpoint-url <string>",
-    "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
-  )
-  .option(
-    "--template <string>",
-    "A template to interpolate the messages before invoking the function. " +
-      "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
-  )
-  .action(queueToLambda);
 
 program
   .command("queue-to-queue")
