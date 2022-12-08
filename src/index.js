@@ -1,12 +1,17 @@
 #! /usr/bin/env node
 
 import { Command } from "commander";
+import path from "path";
+import propertiesReader from "properties-reader";
 import fileToQueue from "./file-to-queue";
 import queueToFile from "./queue-to-file";
 import queueToLambda from "./queue-to-lambda";
 import queueToQueue from "./queue-to-queue";
 
 const program = new Command();
+
+const versionFileName = path.resolve(__dirname, ".version");
+program.version(propertiesReader(versionFileName).get("current"));
 
 program
   .command("queue-to-lambda")

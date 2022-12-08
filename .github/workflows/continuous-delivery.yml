@@ -18,13 +18,6 @@ jobs:
       with:
         node-version: '16'
 
-    - name: "build project"
-      run: |
-        npm ci && npm run build
-
-    - name: "create binary executables"
-      run: npm run release
-
     - name: "extract version from tag"
       id: extract-version
       uses: mad9000/actions-find-and-replace-string@2
@@ -32,6 +25,19 @@ jobs:
         source: ${{ github.ref_name }}
         find: 'v'
         replace: ''
+
+    - name: "build project"
+      run: |
+        npm ci && npm run build
+
+    - name: "create version file"
+      run: |
+        cd dist \
+        && touch .version \
+        && echo current=${{ steps.extract-version.outputs.value }} > .version
+
+    - name: "create binary executables"
+      run: npm run release
 
     - name: "create tar files"
       run: |
