@@ -34,7 +34,7 @@ jobs:
       run: |
         cd dist \
         && touch .version \
-        && echo current=${{ steps.extract-version.outputs.value }} > .version
+        && echo current=${{ github.ref_name }} > .version
 
     - name: "create binary executables"
       run: npm run release
