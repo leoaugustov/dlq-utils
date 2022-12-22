@@ -16,7 +16,7 @@ it('should consume messages from queue and invoke function with each one of them
 
   invokeFunction.mockReturnValueOnce({});
 
-  await queueToLambda({ queueUrl, functionName, endpointUrl });
+  await queueToLambda({ queueUrl, functionName, endpointUrl, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
   expect(consumeMessages.mock.calls[0][1]).toEqual(queueUrl);
@@ -47,7 +47,7 @@ it('should create consumer that returns true when invocation response has not fu
 
   invokeFunction.mockReturnValueOnce({});
 
-  await queueToLambda({ queueUrl, functionName });
+  await queueToLambda({ queueUrl, functionName, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
 
@@ -77,7 +77,7 @@ it('should create consumer that returns false when invocation response has funct
     functionError: 'Some Error'
   });
 
-  await queueToLambda({ queueUrl, functionName });
+  await queueToLambda({ queueUrl, functionName, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
 
@@ -92,7 +92,7 @@ it('should apply the template to message body when it exists', async () => {
 
   invokeFunction.mockReturnValueOnce({});
 
-  await queueToLambda({ queueUrl, functionName, template });
+  await queueToLambda({ queueUrl, functionName, template, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
 

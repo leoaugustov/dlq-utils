@@ -4,7 +4,7 @@ import { sendMessage } from "./sqs";
 import { consumeMessages } from "./sqs-consumer";
 import messageTemplater from "./message-templater";
 
-export default async ({ sourceQueueUrl, destQueueUrl, endpointUrl: endpoint, template, keepSource = false }) => {
+export default async ({ sourceQueueUrl, destQueueUrl, endpointUrl: endpoint, template, keepSource }) => {
   const sqsClient = new SQSClient({ endpoint });
   let totalMessagesMoved = 0;
 

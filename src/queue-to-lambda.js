@@ -5,7 +5,7 @@ import { invokeFunction } from "./lambda";
 import { consumeMessages } from "./sqs-consumer";
 import messageTemplater from "./message-templater";
 
-export default async ({ queueUrl, functionName, endpointUrl: endpoint, template, keepSource = false }) => {
+export default async ({ queueUrl, functionName, endpointUrl: endpoint, template, keepSource }) => {
   const sqsClient = new SQSClient({ endpoint });
   const lambdaClient = new LambdaClient({ endpoint });
   let totalMessagesProcessed = 0;
