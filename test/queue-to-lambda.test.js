@@ -41,7 +41,7 @@ it('should consume messages from queue and invoke function with each one of them
   expect(resolvedEndpoint.port).toBe(4566);
 });
 
-it('should create consumer to return true when invocation response has not function error', async () => {
+it('should create consumer that returns true when invocation response has not function error', async () => {
   const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
   const functionName = 'function-name';
 
@@ -55,7 +55,21 @@ it('should create consumer to return true when invocation response has not funct
   expect(shouldDeleteMessage).toBe(true);
 });
 
-it('should create consumer to return false when invocation response has function error', async () => {
+it('should create consumer that returns false when invocation response has not function error and keepSource is true', async () => {
+  const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
+  const functionName = 'function-name';
+
+  invokeFunction.mockReturnValueOnce({});
+
+  await queueToLambda({ queueUrl, functionName, keepSource: true });
+
+  expect(consumeMessages.mock.calls.length).toBe(1);
+
+  const shouldDeleteMessage = await consumeMessages.mock.calls[0][2]({ body: 'some message' });
+  expect(shouldDeleteMessage).toBe(false);
+});
+
+it('should create consumer that returns false when invocation response has function error', async () => {
   const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
   const functionName = 'function-name';
 

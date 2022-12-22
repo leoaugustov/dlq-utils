@@ -21,6 +21,7 @@ program
   )
   .requiredOption("-s --queue-url <string>", "The URL of the queue that contains the messages")
   .requiredOption("-d --function-name <string>", "The Lambda function name")
+  .option("--keep-source", "Indicate that messages in the queue should be kept", false)
   .option(
     "--endpoint-url <string>",
     "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
@@ -65,6 +66,7 @@ program
   .description("Move all messages in a queue to another one")
   .requiredOption("-s --source-queue-url <string>", "The URL of the queue that contains the messages")
   .requiredOption("-d --dest-queue-url <string>", "The URL of the queue to which messages should be sent")
+  .option("--keep-source", "Indicate that messages in the source queue should be kept", false)
   .option(
     "--endpoint-url <string>",
     "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
