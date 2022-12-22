@@ -22,11 +22,10 @@ export default async ({ queueUrl, functionName, endpointUrl: endpoint, template,
       logger.errorDetail(`FunctionError: ${response.functionError}; Payload: ${response.payload}`);
       return false;
     } else {
-      const deleteMessage = !keepSource;
       logger.info(
-        `Function successfully invoked with message ${message.id}. ${deleteMessage && "Message deleted from queue"}`
+        `Function successfully invoked with message ${message.id}. ${keepSource ? "" : "Message deleted from queue"}`
       );
-      return deleteMessage;
+      return !keepSource;
     }
   };
 
