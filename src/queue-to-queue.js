@@ -4,7 +4,7 @@ import { sendMessage } from "./sqs";
 import { consumeMessages } from "./sqs-consumer";
 import messageTemplater from "./message-templater";
 
-export default async ({ sourceQueueUrl, destQueueUrl, endpointUrl: endpoint, template }) => {
+export default async ({ sourceQueueUrl, destQueueUrl, endpointUrl: endpoint, template, keepSource = false }) => {
   const sqsClient = new SQSClient({ endpoint });
   let totalMessagesMoved = 0;
 
@@ -15,9 +15,11 @@ export default async ({ sourceQueueUrl, destQueueUrl, endpointUrl: endpoint, tem
       messageBody = messageTemplater.applyTemplate(messageBody, template);
     }
     await sendMessage(sqsClient, destQueueUrl, messageBody);
-    return true;
+    return !keepSource;
   };
 
   await consumeMessages(sqsClient, sourceQueueUrl, messageConsumer);
-  logger.success(`Finished queue-to-queue successfully. ${totalMessagesMoved} messages moved`);
+  logger.success(
+    `Finished queue-to-queue successfully. ${totalMessagesMoved} messages ${keepSource ? "copied" : "moved"}`
+  );
 };

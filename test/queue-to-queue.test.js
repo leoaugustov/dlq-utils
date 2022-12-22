@@ -48,7 +48,19 @@ it('should apply the template to message body when it exists', async () => {
   expect(messageSent).toBe('{ "someArray": [ { "field": "value" } ] }');
 });
 
-it('should create consumer that returns true', async () => {
+it('should create consumer that returns false when keepSource param is true', async () => {
+  const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
+  const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
+
+  await queueToQueue({ sourceQueueUrl, destQueueUrl, keepSource: true });
+
+  expect(consumeMessages.mock.calls.length).toBe(1);
+
+  const shouldDeleteMessage = await consumeMessages.mock.calls[0][2]({ body: 'some message' });
+  expect(shouldDeleteMessage).toBe(false);
+});
+
+it('should create consumer that returns true when keepSource param is not present', async () => {
   const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
   const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
 

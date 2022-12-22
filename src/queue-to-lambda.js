@@ -5,7 +5,7 @@ import { invokeFunction } from "./lambda";
 import { consumeMessages } from "./sqs-consumer";
 import messageTemplater from "./message-templater";
 
-export default async ({ queueUrl, functionName, endpointUrl: endpoint, template }) => {
+export default async ({ queueUrl, functionName, endpointUrl: endpoint, template, keepSource = false }) => {
   const sqsClient = new SQSClient({ endpoint });
   const lambdaClient = new LambdaClient({ endpoint });
   let totalMessagesProcessed = 0;
@@ -22,8 +22,11 @@ export default async ({ queueUrl, functionName, endpointUrl: endpoint, template 
       logger.errorDetail(`FunctionError: ${response.functionError}; Payload: ${response.payload}`);
       return false;
     } else {
-      logger.info(`Function successfully invoked with message ${message.id}. Message deleted from queue`);
-      return true;
+      const deleteMessage = !keepSource;
+      logger.info(
+        `Function successfully invoked with message ${message.id}. ${deleteMessage && "Message deleted from queue"}`
+      );
+      return deleteMessage;
     }
   };
 
