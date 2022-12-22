@@ -57,7 +57,7 @@ You will need Node 16 or later.
 Clone this repository and install the project dependencies. Then build the project:
 
 ```shell
-npm run build
+npm run build:dev
 ```
 Next, you need to run the command below inside the repository folder to locally link it with the command `npx dlq-utils`:
 

@@ -14,7 +14,7 @@ it('should consume messages from source queue and send them to dest queue', asyn
   const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
   const endpointUrl = 'http://localhost:4566';
 
-  await queueToQueue({ sourceQueueUrl, destQueueUrl, endpointUrl });
+  await queueToQueue({ sourceQueueUrl, destQueueUrl, endpointUrl, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
   expect(consumeMessages.mock.calls[0][1]).toEqual(sourceQueueUrl);
@@ -37,7 +37,7 @@ it('should apply the template to message body when it exists', async () => {
   const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
   const template = '{ "someArray": [ *msg* ] }';
 
-  await queueToQueue({ sourceQueueUrl, destQueueUrl, template });
+  await queueToQueue({ sourceQueueUrl, destQueueUrl, template, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
 
@@ -60,11 +60,11 @@ it('should create consumer that returns false when keepSource param is true', as
   expect(shouldDeleteMessage).toBe(false);
 });
 
-it('should create consumer that returns true when keepSource param is not present', async () => {
+it('should create consumer that returns true when keepSource param is false', async () => {
   const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
   const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
 
-  await queueToQueue({ sourceQueueUrl, destQueueUrl });
+  await queueToQueue({ sourceQueueUrl, destQueueUrl, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
 
