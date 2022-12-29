@@ -18,6 +18,15 @@ brew update
 brew upgrade dlq-utils
 ```
 
+## Features
+
+- Invoke a function using messages from a queue
+- Move or copy messages from one queue to another
+- Template a message before sending it to a queue or invoking a function
+- (soon) Filter messages before sending them to a queue or invoking a function
+- Save messages from a queue to a text file
+- Read lines from a text file and send them as messages to a queue
+
 ## Usage
 It's necessary to specify the environment variable `AWS_PROFILE` with the [named profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) to use before executing a command.
 
