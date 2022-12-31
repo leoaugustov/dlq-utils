@@ -30,6 +30,6 @@ jobs:
       with:
         node-version: '16'
 
-    - name: "unit testing"
+    - name: "test"
       run: |
         npm ci && npm test
