@@ -44,7 +44,7 @@ global.createQueue = async (sqsClient, queueName) => {
   }));
 };
 
-global.cleanQueue = async (sqsClient, queueName) => {
+global.clearQueue = async (sqsClient, queueName) => {
   await sqsClient.send(new DeleteMessageBatchCommand({
     QueueUrl: getQueueUrl(queueName)
   }));
