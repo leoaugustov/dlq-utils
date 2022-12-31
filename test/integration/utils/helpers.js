@@ -2,7 +2,11 @@ import { GenericContainer } from "testcontainers";
 import { SQSClient, CreateQueueCommand, DeleteMessageBatchCommand } from "@aws-sdk/client-sqs";
 import { sendMessage, receiveMessages } from "../../../src/sqs";
 
+const VISIBILITY_TIMEOUT = "10";
+
 jest.setTimeout(30000); // testTimeout does not work with profiles
+
+global.waitVisibilityTimeout = () => new Promise(resolve => setTimeout(resolve, VISIBILITY_TIMEOUT * 1000));
 
 let sqsEndpointUrl;
 
@@ -32,7 +36,12 @@ global.createSqsClient = () => {
 };
 
 global.createQueue = async (sqsClient, queueName) => {
-  await sqsClient.send(new CreateQueueCommand({ QueueName: queueName }));
+  await sqsClient.send(new CreateQueueCommand({
+    QueueName: queueName,
+    Attributes: {
+      "VisibilityTimeout": VISIBILITY_TIMEOUT
+    }
+  }));
 };
 
 global.cleanQueue = async (sqsClient, queueName) => {

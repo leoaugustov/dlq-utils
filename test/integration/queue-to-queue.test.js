@@ -42,3 +42,24 @@ it('should consume messages from source queue and send them to dest queue', asyn
   expect(messagesFound.map(message => message.body))
     .toIncludeSameMembers(['message-1', 'message-2', 'message-3', 'message-4']);
 });
+
+it('should keep message in source queue when keepSource param is true', async () => {
+  await sendMessage(sqsClient, SOURCE_QUEUE_NAME, 'message-1');
+
+  var sourceQueueUrl = getQueueUrl(SOURCE_QUEUE_NAME);
+  var destQueueUrl = getQueueUrl(DEST_QUEUE_NAME);
+  await queueToQueue({
+    sourceQueueUrl,
+    destQueueUrl,
+    endpointUrl: SQS_ENDPOINT_URL,
+    keepSource: true
+  });
+
+  const messagesFoundInDestQueue = await receiveMessages(sqsClient, DEST_QUEUE_NAME);
+  expect(messagesFoundInDestQueue.map(message => message.body)).toIncludeSameMembers(['message-1']);
+
+  await waitVisibilityTimeout();
+
+  const messagesFoundInSourceQueue = await receiveMessages(sqsClient, SOURCE_QUEUE_NAME);
+  expect(messagesFoundInSourceQueue.map(message => message.body)).toIncludeSameMembers(['message-1']);
+});

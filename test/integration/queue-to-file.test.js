@@ -42,3 +42,27 @@ it('should consume messages from queue and save them in file', async () => {
 
   expect(lines).toIncludeSameMembers(['message-1', 'message-2', 'message-3', 'message-4']);
 });
+
+it('should keep message in queue when keepSource param is true', async () => {
+  const queueUrl = getQueueUrl(QUEUE_NAME);
+  const fileName = temporaryFile();
+
+  await sendMessage(sqsClient, QUEUE_NAME, 'message-1');
+
+  await queueToFile({
+    queueUrl,
+    file: fileName,
+    endpointUrl: SQS_ENDPOINT_URL,
+    keepSource: true
+  });
+
+  const lines = []
+  await consumeLines(fileName, async line => lines.push(line));
+
+  expect(lines).toIncludeSameMembers(['message-1']);
+
+  await waitVisibilityTimeout();
+
+  const messagesFoundInQueue = await receiveMessages(sqsClient, QUEUE_NAME);
+  expect(messagesFoundInQueue.map(message => message.body)).toIncludeSameMembers(['message-1']);
+});
