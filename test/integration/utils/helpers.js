@@ -3,7 +3,7 @@ import { SQSClient, CreateQueueCommand, DeleteMessageBatchCommand } from "@aws-s
 import { sendMessage, receiveMessages } from "../../../src/sqs";
 import { consumeMessages } from "../../../src/sqs-consumer";
 
-const VISIBILITY_TIMEOUT = "10";
+const VISIBILITY_TIMEOUT = "6"; // must be greater than WaitTimeSeconds used to receive messages
 
 jest.setTimeout(30000); // testTimeout does not work with profiles
 

@@ -13,10 +13,6 @@ beforeAll(async () => {
   await createQueue(sqsClient, QUEUE_NAME);
 });
 
-afterEach(async () => {
-  await clearQueues(sqsClient, QUEUE_NAME);
-});
-
 afterAll(async () => {
   await sqsContainer.stop();
 });
