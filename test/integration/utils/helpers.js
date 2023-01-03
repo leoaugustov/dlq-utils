@@ -47,9 +47,9 @@ global.createQueue = async (sqsClient, queueName) => {
 
 global.clearQueues = async (sqsClient, ...queueNames) => {
   await waitVisibilityTimeout();
-  for(const queueName of queueNames) {
-    await consumeMessages(sqsClient, getQueueUrl(queueName), () => true);
-  }
+
+  const promises = queueNames.map((queueName) => consumeMessages(sqsClient, getQueueUrl(queueName), () => true));
+  await Promise.all(promises);
 };
 
 global.sendMessage = async (sqsClient, queueName, messageBody) => {
