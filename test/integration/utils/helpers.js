@@ -1,6 +1,7 @@
 import { GenericContainer } from "testcontainers";
 import { SQSClient, CreateQueueCommand, DeleteMessageBatchCommand } from "@aws-sdk/client-sqs";
 import { sendMessage, receiveMessages } from "../../../src/sqs";
+import { consumeMessages } from "../../../src/sqs-consumer";
 
 const VISIBILITY_TIMEOUT = "10";
 
@@ -44,10 +45,11 @@ global.createQueue = async (sqsClient, queueName) => {
   }));
 };
 
-global.clearQueue = async (sqsClient, queueName) => {
-  await sqsClient.send(new DeleteMessageBatchCommand({
-    QueueUrl: getQueueUrl(queueName)
-  }));
+global.clearQueues = async (sqsClient, ...queueNames) => {
+  await waitVisibilityTimeout();
+  for(const queueName of queueNames) {
+    await consumeMessages(sqsClient, getQueueUrl(queueName), () => true);
+  }
 };
 
 global.sendMessage = async (sqsClient, queueName, messageBody) => {

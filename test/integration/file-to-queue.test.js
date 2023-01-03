@@ -14,7 +14,7 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-  await clearQueue(sqsClient, QUEUE_NAME);
+  await clearQueues(sqsClient, QUEUE_NAME);
 });
 
 afterAll(async () => {
