@@ -14,22 +14,15 @@ beforeAll(async () => {
   await createQueue(sqsClient, QUEUE_NAME);
 });
 
-afterEach(async () => {
-  await clearQueues(sqsClient, QUEUE_NAME);
-});
-
 afterAll(async () => {
   await sqsContainer.stop();
 });
 
-it('should consume messages from queue and save them in file', async () => {
+it('should consume messages from queue (without deleting) and save them in file', async () => {
   const queueUrl = getQueueUrl(QUEUE_NAME);
   const fileName = temporaryFile();
 
-  await sendMessage(sqsClient, QUEUE_NAME, 'message-1');
-  await sendMessage(sqsClient, QUEUE_NAME, 'message-2');
-  await sendMessage(sqsClient, QUEUE_NAME, 'message-3');
-  await sendMessage(sqsClient, QUEUE_NAME, 'message-4');
+  const messages = await sendTestMessages(sqsClient, QUEUE_NAME);
 
   await queueToFile({
     queueUrl,
@@ -40,5 +33,8 @@ it('should consume messages from queue and save them in file', async () => {
   const lines = []
   await consumeLines(fileName, async line => lines.push(line));
 
-  expect(lines).toIncludeSameMembers(['message-1', 'message-2', 'message-3', 'message-4']);
+  expect(lines).toIncludeSameMembers(messages);
+
+  await waitVisibilityTimeout();
+  await assertQueueContainsMessages(sqsClient, QUEUE_NAME, messages);
 });

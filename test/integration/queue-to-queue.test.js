@@ -23,10 +23,7 @@ afterAll(async () => {
 });
 
 it('should consume messages from source queue and send them to dest queue', async () => {
-  await sendMessage(sqsClient, SOURCE_QUEUE_NAME, 'message-1');
-  await sendMessage(sqsClient, SOURCE_QUEUE_NAME, 'message-2');
-  await sendMessage(sqsClient, SOURCE_QUEUE_NAME, 'message-3');
-  await sendMessage(sqsClient, SOURCE_QUEUE_NAME, 'message-4');
+  const messages = await sendTestMessages(sqsClient, SOURCE_QUEUE_NAME);
 
   var sourceQueueUrl = getQueueUrl(SOURCE_QUEUE_NAME);
   var destQueueUrl = getQueueUrl(DEST_QUEUE_NAME);
@@ -36,14 +33,11 @@ it('should consume messages from source queue and send them to dest queue', asyn
     endpointUrl: SQS_ENDPOINT_URL
   });
 
-  const messagesFound = await receiveMessages(sqsClient, DEST_QUEUE_NAME);
-
-  expect(messagesFound.map(message => message.body))
-    .toIncludeSameMembers(['message-1', 'message-2', 'message-3', 'message-4']);
+  await assertQueueContainsMessages(sqsClient, DEST_QUEUE_NAME, messages);
 });
 
-it('should keep message in source queue when keepSource param is true', async () => {
-  await sendMessage(sqsClient, SOURCE_QUEUE_NAME, 'message-1');
+it('should keep messages in source queue when keepSource param is true', async () => {
+  const messages = await sendTestMessages(sqsClient, SOURCE_QUEUE_NAME);
 
   var sourceQueueUrl = getQueueUrl(SOURCE_QUEUE_NAME);
   var destQueueUrl = getQueueUrl(DEST_QUEUE_NAME);
@@ -54,11 +48,8 @@ it('should keep message in source queue when keepSource param is true', async ()
     keepSource: true
   });
 
-  const messagesFoundInDestQueue = await receiveMessages(sqsClient, DEST_QUEUE_NAME);
-  expect(messagesFoundInDestQueue.map(message => message.body)).toIncludeSameMembers(['message-1']);
+  await assertQueueContainsMessages(sqsClient, DEST_QUEUE_NAME, messages);
 
   await waitVisibilityTimeout();
-
-  const messagesFoundInSourceQueue = await receiveMessages(sqsClient, SOURCE_QUEUE_NAME);
-  expect(messagesFoundInSourceQueue.map(message => message.body)).toIncludeSameMembers(['message-1']);
+  await assertQueueContainsMessages(sqsClient, SOURCE_QUEUE_NAME, messages);
 });
