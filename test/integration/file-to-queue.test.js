@@ -31,8 +31,5 @@ it('should consume file lines and send a message with each one of them', async (
     }
   );
 
-  const messagesFound = await receiveMessages(sqsClient, QUEUE_NAME);
-
-  expect(messagesFound.map(message => message.body))
-    .toIncludeSameMembers(['first line', 'second line', 'third line']);
+  await assertQueueContainsMessages(sqsClient, QUEUE_NAME, ['first line', 'second line', 'third line']);
 });

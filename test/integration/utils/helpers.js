@@ -52,10 +52,17 @@ global.clearQueues = async (sqsClient, ...queueNames) => {
   await Promise.all(promises);
 };
 
-global.sendMessage = async (sqsClient, queueName, messageBody) => {
-  await sendMessage(sqsClient, getQueueUrl(queueName), messageBody);
+global.sendTestMessages = async (sqsClient, queueName) => {
+  const messages = [];
+  for (let i = 1; i <= 10; i++) {
+    const messageBody = `message-${i}`;
+    messages.push(messageBody);
+    await sendMessage(sqsClient, getQueueUrl(queueName), messageBody);
+  }
+  return messages;
 };
 
-global.receiveMessages = async (sqsClient, queueName) => {
-  return await receiveMessages(sqsClient, getQueueUrl(queueName));
+global.assertQueueContainsMessages = async (sqsClient, queueName, expectedMessages) => {
+  const messagesFoundInQueue = await receiveMessages(sqsClient, getQueueUrl(queueName));
+  expect(messagesFoundInQueue.map(message => message.body)).toIncludeSameMembers(expectedMessages);
 };

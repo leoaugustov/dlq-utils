@@ -22,10 +22,7 @@ it('should consume messages from queue (without deleting) and save them in file'
   const queueUrl = getQueueUrl(QUEUE_NAME);
   const fileName = temporaryFile();
 
-  await sendMessage(sqsClient, QUEUE_NAME, 'message-1');
-  await sendMessage(sqsClient, QUEUE_NAME, 'message-2');
-  await sendMessage(sqsClient, QUEUE_NAME, 'message-3');
-  await sendMessage(sqsClient, QUEUE_NAME, 'message-4');
+  const messages = await sendTestMessages(sqsClient, QUEUE_NAME);
 
   await queueToFile({
     queueUrl,
@@ -36,11 +33,8 @@ it('should consume messages from queue (without deleting) and save them in file'
   const lines = []
   await consumeLines(fileName, async line => lines.push(line));
 
-  expect(lines).toIncludeSameMembers(['message-1', 'message-2', 'message-3', 'message-4']);
+  expect(lines).toIncludeSameMembers(messages);
 
   await waitVisibilityTimeout();
-
-  const messagesFoundInQueueAfterExecution = await receiveMessages(sqsClient, QUEUE_NAME);
-  expect(messagesFoundInQueueAfterExecution.map(message => message.body))
-    .toIncludeSameMembers(['message-1', 'message-2', 'message-3', 'message-4']);
+  await assertQueueContainsMessages(sqsClient, QUEUE_NAME, messages);
 });
