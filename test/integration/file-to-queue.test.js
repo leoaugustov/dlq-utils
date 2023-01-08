@@ -1,4 +1,4 @@
-import fileToQueue from '../../src/file-to-queue';
+import fileToQueue from 'file-to-queue';
 import { temporaryWriteTask } from 'tempy';
 
 const QUEUE_NAME = 'dest-queue';

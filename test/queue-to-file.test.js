@@ -1,7 +1,7 @@
-import queueToFile from "../src/queue-to-file";
-import { consumeMessages } from "../src/sqs-consumer";
+import queueToFile from "queue-to-file";
+import { consumeMessages } from "sqs-consumer";
 import fs from "fs";
-jest.mock('../src/sqs-consumer', () => ({
+jest.mock('sqs-consumer', () => ({
   consumeMessages: jest.fn()
 }));
 jest.mock('fs', () => ({

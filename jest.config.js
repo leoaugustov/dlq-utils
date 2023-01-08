@@ -5,6 +5,7 @@ const createProject = (type) => {
     displayName: type,
     verbose: true,
     clearMocks: true,
+    moduleDirectories: ["node_modules", "src"],
     transformIgnorePatterns: [
       "/node_modules/(?!(tempy|fs|unique-string|crypto-random-string|is-stream)/)"
     ],
