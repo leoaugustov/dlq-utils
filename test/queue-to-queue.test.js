@@ -1,11 +1,11 @@
-import queueToQueue from '../src/queue-to-queue';
-import { consumeMessages } from '../src/sqs-consumer';
-import { sendMessage } from '../src/sqs';
+import queueToQueue from 'queue-to-queue';
+import { consumeMessages } from 'sqs-consumer';
+import { sendMessage } from 'sqs';
 import { SQSClient } from '@aws-sdk/client-sqs';
-jest.mock('../src/sqs-consumer', () => ({
+jest.mock('sqs-consumer', () => ({
   consumeMessages: jest.fn()
 }));
-jest.mock('../src/sqs', () => ({
+jest.mock('sqs', () => ({
   sendMessage: jest.fn()
 }));
 

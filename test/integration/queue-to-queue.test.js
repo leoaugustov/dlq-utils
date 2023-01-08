@@ -1,4 +1,4 @@
-import queueToQueue from '../../src/queue-to-queue';
+import queueToQueue from 'queue-to-queue';
 
 const SOURCE_QUEUE_NAME = 'source-queue';
 const DEST_QUEUE_NAME = 'dest-queue';

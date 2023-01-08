@@ -1,6 +1,6 @@
-import { consumeMessages } from '../src/sqs-consumer';
-import { receiveMessages, deleteMessages } from '../src/sqs';
-jest.mock('../src/sqs', () => ({
+import { consumeMessages } from 'sqs-consumer';
+import { receiveMessages, deleteMessages } from 'sqs';
+jest.mock('sqs', () => ({
   receiveMessages: jest.fn(),
   deleteMessages: jest.fn(),
 }));

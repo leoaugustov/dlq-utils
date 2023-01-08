@@ -1,11 +1,11 @@
-import queueToLambda from '../src/queue-to-lambda';
-import { invokeFunction } from '../src/lambda';
-import { consumeMessages } from '../src/sqs-consumer';
+import queueToLambda from 'queue-to-lambda';
+import { invokeFunction } from 'lambda';
+import { consumeMessages } from 'sqs-consumer';
 import { LambdaClient } from '@aws-sdk/client-lambda';
-jest.mock('../src/sqs-consumer', () => ({
+jest.mock('sqs-consumer', () => ({
   consumeMessages: jest.fn()
 }));
-jest.mock('../src/lambda', () => ({
+jest.mock('lambda', () => ({
   invokeFunction: jest.fn()
 }));
 

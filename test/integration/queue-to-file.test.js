@@ -1,5 +1,5 @@
-import queueToFile from "../../src/queue-to-file";
-import { consumeLines } from "../../src/file-consumer";
+import queueToFile from "queue-to-file";
+import { consumeLines } from "file-consumer";
 import { temporaryFile } from "tempy";
 
 const QUEUE_NAME = 'source-queue';

@@ -1,11 +1,11 @@
-import fileToQueue from '../src/file-to-queue';
-import { consumeLines } from '../src/file-consumer';
-import { sendMessage } from '../src/sqs';
+import fileToQueue from 'file-to-queue';
+import { consumeLines } from 'file-consumer';
+import { sendMessage } from 'sqs';
 import { SQSClient } from '@aws-sdk/client-sqs';
-jest.mock('../src/file-consumer', () => ({
+jest.mock('file-consumer', () => ({
     consumeLines: jest.fn()
 }));
-jest.mock('../src/sqs', () => ({
+jest.mock('sqs', () => ({
     sendMessage: jest.fn()
 }));
 

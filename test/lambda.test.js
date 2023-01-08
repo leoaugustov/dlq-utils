@@ -1,4 +1,4 @@
-import { invokeFunction } from '../src/lambda';
+import { invokeFunction } from 'lambda';
 
 function createLambdaClient() {
   return  { send: jest.fn() };

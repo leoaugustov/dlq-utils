@@ -1,4 +1,4 @@
-import { sendMessage, receiveMessages, deleteMessages } from '../src/sqs';
+import { sendMessage, receiveMessages, deleteMessages } from 'sqs';
 
 function createSqsClient() {
   return  { send: jest.fn() };

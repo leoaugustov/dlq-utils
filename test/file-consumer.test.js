@@ -1,5 +1,5 @@
 import { temporaryWriteTask } from 'tempy';
-import { consumeLines } from '../src/file-consumer';
+import { consumeLines } from 'file-consumer';
 
 describe('consumeLines', () => {
   it('should create liner with fileName and call consumer for each line on file ', async () => {
