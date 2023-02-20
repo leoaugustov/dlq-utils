@@ -1,4 +1,10 @@
-import { SendMessageCommand, ReceiveMessageCommand, DeleteMessageBatchCommand } from "@aws-sdk/client-sqs";
+import {
+  SendMessageCommand,
+  ReceiveMessageCommand,
+  DeleteMessageBatchCommand,
+  GetQueueUrlCommand,
+  SQSServiceException,
+} from "@aws-sdk/client-sqs";
 
 export async function sendMessage(sqsClient, queueUrl, message) {
   const response = await sqsClient.send(
@@ -54,5 +60,22 @@ export async function deleteMessages(sqsClient, queueUrl, messagesReceiptHandles
 
   if (response.Failed) {
     throw new Error("Couldn't delete some messages");
+  }
+}
+
+export async function isExistingQueue(sqsClient, queueName) {
+  try {
+    await sqsClient.send(
+      new GetQueueUrlCommand({
+        QueueName: queueName,
+      })
+    );
+    return true;
+  } catch (err) {
+    if (err instanceof SQSServiceException) {
+      return false;
+    } else {
+      throw err;
+    }
   }
 }
