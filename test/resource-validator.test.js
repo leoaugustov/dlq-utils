@@ -31,26 +31,34 @@ describe('validate', () => {
   });
 
   it('should extract queue name from queue URL and return true when queue exists', async () => {
+    const sqsClient = { send: jest.fn() };
     isExistingQueue.mockReturnValueOnce(true);
 
-    const valid = await resourceValidator.validate([{
-      type: "queue",
-      value: "https://sqs.us-east-1.amazonaws.com/00000000/test-queue"
-    }]);
+    const valid = await resourceValidator.validate(
+      [{
+        type: "queue",
+        value: "https://sqs.us-east-1.amazonaws.com/00000000/test-queue"
+      }],
+      sqsClient
+    );
 
-    expect(isExistingQueue).toBeCalledWith("test-queue");
+    expect(isExistingQueue).toBeCalledWith(sqsClient, "test-queue");
     expect(valid).toBe(true);
   });
 
   it('should extract queue name from queue URL and return false when queue does not exist', async () => {
+    const sqsClient = { send: jest.fn() };
     isExistingQueue.mockReturnValueOnce(false);
 
-    const valid = await resourceValidator.validate([{
-      type: "queue",
-      value: "https://sqs.us-east-1.amazonaws.com/00000000/test-queue"
-    }]);
+    const valid = await resourceValidator.validate(
+      [{
+        type: "queue",
+        value: "https://sqs.us-east-1.amazonaws.com/00000000/test-queue"
+      }],
+      sqsClient
+    );
 
-    expect(isExistingQueue).toBeCalledWith("test-queue");
+    expect(isExistingQueue).toBeCalledWith(sqsClient, "test-queue");
     expect(valid).toBe(false);
   });
 });
