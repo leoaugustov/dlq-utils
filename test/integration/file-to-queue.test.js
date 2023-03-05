@@ -33,3 +33,30 @@ it('should consume file lines and send a message with each one of them', async (
 
   await assertQueueContainsMessages(sqsClient, QUEUE_NAME, ['first line', 'second line', 'third line']);
 });
+
+it('should not try to process when file does not exist', async() => {
+  const queueUrl = getQueueUrl(QUEUE_NAME);
+
+  await fileToQueue({
+    file: "nonexistent",
+    queueUrl,
+    endpointUrl: SQS_ENDPOINT_URL
+  });
+
+  await assertQueueIsEmpty(sqsClient, QUEUE_NAME);
+});
+
+it('should not try to process when queue does not exist', async() => {
+  const queueUrl = getQueueUrl("nonexistent");
+
+  await temporaryWriteTask(
+    'first line\nsecond line\nthird line',
+    async fileName => {
+      await fileToQueue({
+        file: fileName,
+        queueUrl,
+        endpointUrl: SQS_ENDPOINT_URL
+      });
+    }
+  );
+});
