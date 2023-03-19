@@ -99,4 +99,30 @@ describe('validate', () => {
     expect(isExistingFunction).toBeCalledWith(lambdaClient, "test-function");
     expect(valid).toBe(false);
   });
+
+  it('should validate file before every other resource', async () => {
+    const sqsClient = { send: jest.fn() };
+    const lambdaClient = { send: jest.fn() };
+
+    const valid = await resourceValidator.validate(
+      [{
+        type: "file",
+        value: "path/nonexistent-file"
+      },
+      {
+        type: "queue",
+        value: "https://sqs.us-east-1.amazonaws.com/00000000/test-queue"
+      },
+      {
+        type: "function",
+        value: "test-function"
+      }],
+      sqsClient,
+      lambdaClient
+    );
+
+    expect(valid).toBe(false);
+    expect(isExistingQueue.mock.calls.length).toBe(0);
+    expect(isExistingFunction.mock.calls.length).toBe(0);
+  });
 });
