@@ -124,7 +124,8 @@ describe('validate', () => {
     const valid = await resourceValidator.validate(
       [{
         type: "file",
-        value: "path/nonexistent-file"
+        value: "path/nonexistent-file",
+        requiredPermission: "read"
       },
       {
         type: "queue",
