@@ -35,7 +35,7 @@ async function validateFile({ value: filePath, requiredPermission }) {
     await fs.access(filePath, mapPermissionToFsMode(requiredPermission));
     return true;
   } catch (error) {
-    logger.error("The specified file does not exist or is not readable/writable");
+    logger.error("(ERROR) The specified file does not exist or is not readable/writable");
     return false;
   }
 }
@@ -45,7 +45,7 @@ async function validateQueue(sqsClient, queueUrl) {
   if (await isExistingQueue(sqsClient, queueName)) {
     return true;
   }
-  logger.error("Some of the specified queues do not exist or are not accessible");
+  logger.error("(ERROR) Some of the specified queues do not exist or are not accessible");
   return false;
 }
 

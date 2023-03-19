@@ -9,7 +9,7 @@ function success(message) {
 }
 
 function error(message) {
-  console.log(chalk.red.bold(`(ERROR) ${message}`));
+  console.log(chalk.red.bold(message));
 }
 
 function errorDetail(message) {
