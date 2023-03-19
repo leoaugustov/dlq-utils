@@ -17,7 +17,8 @@ describe('validate', () => {
       async filePath => {
         const valid = await resourceValidator.validate([{
           type: "file",
-          value: filePath
+          value: filePath,
+          requiredPermission: "read"
         }]);
 
         expect(valid).toBe(true);
@@ -28,10 +29,26 @@ describe('validate', () => {
   it('should return false when file does not exist', async () => {
     const valid = await resourceValidator.validate([{
       type: "file",
-      value: "path/file"
+      value: "path/file",
+      requiredPermission: "read"
     }]);
 
     expect(valid).toBe(false);
+  });
+
+  it('should throw error when file required permission is not read', async () => {
+    await temporaryWriteTask(
+      'some text',
+      async filePath => {
+        await expect(
+          async () => await resourceValidator.validate([{
+            type: "file",
+            value: filePath,
+            requiredPermission: "write"
+          }])
+        ).rejects.toThrow(Error);
+      }
+    );
   });
 
   it('should extract queue name from queue URL and return true when queue exists', async () => {

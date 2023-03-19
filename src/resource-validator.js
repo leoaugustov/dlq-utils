@@ -42,11 +42,12 @@ async function validate(resources, sqsClient, lambdaClient) {
 }
 
 async function validateFile({ value: filePath, requiredPermission }) {
+  const accessMode = mapPermissionToFsMode(requiredPermission);
   try {
-    await fs.access(filePath, mapPermissionToFsMode(requiredPermission));
+    await fs.access(filePath, accessMode);
     return true;
   } catch (error) {
-    logger.error("(ERROR) The specified file does not exist or is not readable/writable");
+    logger.error("(ERROR) The specified file does not exist or is not readable");
     return false;
   }
 }
@@ -71,9 +72,8 @@ async function validateFunction(lambdaClient, functionName) {
 function mapPermissionToFsMode(permissionFlag) {
   if (permissionFlag === "read") {
     return fs.R_OK;
-  } else if (permissionFlag === "write") {
-    return fs.W_OK;
   }
+  throw new Error("Unknown file permission");
 }
 
 export default { validate };
