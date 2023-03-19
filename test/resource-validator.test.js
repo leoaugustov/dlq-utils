@@ -1,9 +1,13 @@
 import resourceValidator from "resource-validator";
 import { isExistingQueue } from 'sqs';
+import { isExistingFunction } from 'lambda';
 import { temporaryWriteTask } from 'tempy';
 
 jest.mock('sqs', () => ({
   isExistingQueue: jest.fn()
+}));
+jest.mock('lambda', () => ({
+  isExistingFunction: jest.fn()
 }));
 
 describe('validate', () => {
@@ -59,6 +63,40 @@ describe('validate', () => {
     );
 
     expect(isExistingQueue).toBeCalledWith(sqsClient, "test-queue");
+    expect(valid).toBe(false);
+  });
+
+  it('should return true when function exists', async () => {
+    const lambdaClient = { send: jest.fn() };
+    isExistingFunction.mockReturnValueOnce(true);
+
+    const valid = await resourceValidator.validate(
+      [{
+        type: "function",
+        value: "test-function"
+      }],
+      null,
+      lambdaClient
+    );
+
+    expect(isExistingFunction).toBeCalledWith(lambdaClient, "test-function");
+    expect(valid).toBe(true);
+  });
+
+  it('should return false when function exists', async () => {
+    const lambdaClient = { send: jest.fn() };
+    isExistingFunction.mockReturnValueOnce(false);
+
+    const valid = await resourceValidator.validate(
+      [{
+        type: "function",
+        value: "test-function"
+      }],
+      null,
+      lambdaClient
+    );
+
+    expect(isExistingFunction).toBeCalledWith(lambdaClient, "test-function");
     expect(valid).toBe(false);
   });
 });
