@@ -46,7 +46,7 @@ it('should not try to process when file does not exist', async() => {
   await assertQueueIsEmpty(sqsClient, QUEUE_NAME);
 });
 
-it('should not try to process when queue does not exist', async() => {
+it('should not throw exception when queue does not exist', async() => {
   const queueUrl = getQueueUrl("nonexistent");
 
   await temporaryWriteTask(
