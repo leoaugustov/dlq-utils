@@ -81,6 +81,5 @@ After that, every time you make a change in the code base you need to rebuild th
 Here you will find a list of features I want to include in the project:
 
 - ✨ Add the ability to filter out messages with a regex
-- 🦺 Add validation for better feedback when some resource (e.g. file, queue or function) does not exist
 - 🔧 Add tooling to facilitate local testing
 - 🔧 Add hot reload to automatically rebuild the project and improve the development experience

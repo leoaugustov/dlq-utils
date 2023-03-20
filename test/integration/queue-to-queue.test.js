@@ -53,3 +53,29 @@ it('should keep messages in source queue when keepSource param is true', async (
   await waitVisibilityTimeout();
   await assertQueueContainsMessages(sqsClient, SOURCE_QUEUE_NAME, messages);
 });
+
+it('should not try to process when source queue does not exist', async () => {
+  var sourceQueueUrl = getQueueUrl("nonexistent");
+  var destQueueUrl = getQueueUrl(DEST_QUEUE_NAME);
+  await queueToQueue({
+    sourceQueueUrl,
+    destQueueUrl,
+    endpointUrl: SQS_ENDPOINT_URL
+  });
+
+  await assertQueueIsEmpty(sqsClient, DEST_QUEUE_NAME);
+});
+
+it('should not try to process when dest queue does not exist', async () => {
+  const messages = await sendTestMessages(sqsClient, SOURCE_QUEUE_NAME);
+
+  var sourceQueueUrl = getQueueUrl(SOURCE_QUEUE_NAME);
+  var destQueueUrl = getQueueUrl("nonexistent");
+  await queueToQueue({
+    sourceQueueUrl,
+    destQueueUrl,
+    endpointUrl: SQS_ENDPOINT_URL
+  });
+
+  await assertQueueContainsMessages(sqsClient, SOURCE_QUEUE_NAME, messages);
+});

@@ -38,3 +38,13 @@ it('should consume messages from queue (without deleting) and save them in file'
   await waitVisibilityTimeout();
   await assertQueueContainsMessages(sqsClient, QUEUE_NAME, messages);
 });
+
+it('should not throw exception when queue does not exist', async () => {
+  const fileName = temporaryFile();
+  const queueUrl = getQueueUrl("nonexistent");
+  await queueToFile({
+    queueUrl,
+    file: fileName,
+    endpointUrl: SQS_ENDPOINT_URL
+  });
+});

@@ -2,12 +2,18 @@ import queueToLambda from 'queue-to-lambda';
 import { invokeFunction } from 'lambda';
 import { consumeMessages } from 'sqs-consumer';
 import { LambdaClient } from '@aws-sdk/client-lambda';
+import { SQSClient } from '@aws-sdk/client-sqs';
+import resourceValidator from "resource-validator";
 jest.mock('sqs-consumer', () => ({
   consumeMessages: jest.fn()
 }));
 jest.mock('lambda', () => ({
   invokeFunction: jest.fn()
 }));
+jest.mock('resource-validator', () => ({
+  validate: jest.fn()
+}));
+
 
 it('should consume messages from queue and invoke function with each one of them', async () => {
   const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
@@ -15,6 +21,7 @@ it('should consume messages from queue and invoke function with each one of them
   const endpointUrl = 'http://localhost:4566';
 
   invokeFunction.mockReturnValueOnce({});
+  resourceValidator.validate.mockReturnValueOnce(true);
 
   await queueToLambda({ queueUrl, functionName, endpointUrl, keepSource: false });
 
@@ -46,6 +53,7 @@ it('should create consumer that returns true when invocation response has not fu
   const functionName = 'function-name';
 
   invokeFunction.mockReturnValueOnce({});
+  resourceValidator.validate.mockReturnValueOnce(true);
 
   await queueToLambda({ queueUrl, functionName, keepSource: false });
 
@@ -60,6 +68,7 @@ it('should create consumer that returns false when invocation response has not f
   const functionName = 'function-name';
 
   invokeFunction.mockReturnValueOnce({});
+  resourceValidator.validate.mockReturnValueOnce(true);
 
   await queueToLambda({ queueUrl, functionName, keepSource: true });
 
@@ -76,6 +85,7 @@ it('should create consumer that returns false when invocation response has funct
   invokeFunction.mockReturnValueOnce({
     functionError: 'Some Error'
   });
+  resourceValidator.validate.mockReturnValueOnce(true);
 
   await queueToLambda({ queueUrl, functionName, keepSource: false });
 
@@ -91,6 +101,7 @@ it('should apply the template to message body when it exists', async () => {
   const template = '{ "someArray": [ *msg* ] }';
 
   invokeFunction.mockReturnValueOnce({});
+  resourceValidator.validate.mockReturnValueOnce(true);
 
   await queueToLambda({ queueUrl, functionName, template, keepSource: false });
 
@@ -105,4 +116,28 @@ it('should apply the template to message body when it exists', async () => {
 
   const invocationPayload = invokeFunction.mock.calls[0][2];
   expect(invocationPayload).toBe('{ "someArray": [ { "field": "value" } ] }');
+});
+
+it('should not consume messages when some resource is not valid', async () => {
+  const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
+  const functionName = 'function-name';
+
+  resourceValidator.validate.mockReturnValueOnce(false);
+
+  await queueToLambda({ queueUrl, functionName, keepSource: false });
+
+  expect(consumeMessages.mock.calls.length).toBe(0);
+
+  const expectedResourcesToValidate = [
+    {
+      type: "queue",
+      value: queueUrl,
+    },
+    {
+      type: "function",
+      value: functionName,
+    },
+  ];
+  expect(resourceValidator.validate)
+    .toBeCalledWith(expectedResourcesToValidate, expect.any(SQSClient), expect.any(LambdaClient));
 });

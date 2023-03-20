@@ -4,10 +4,16 @@ import { LambdaClient } from "@aws-sdk/client-lambda";
 import { invokeFunction } from "./lambda";
 import { consumeMessages } from "./sqs-consumer";
 import messageTemplater from "./message-templater";
+import resourceValidator from "./resource-validator";
 
 export default async ({ queueUrl, functionName, endpointUrl: endpoint, template, keepSource }) => {
   const sqsClient = new SQSClient({ endpoint });
   const lambdaClient = new LambdaClient({ endpoint });
+
+  if (!(await allResourcesValid(sqsClient, queueUrl, lambdaClient, functionName))) {
+    return;
+  }
+
   let totalMessagesProcessed = 0;
   let invocationFailures = 0;
 
@@ -35,3 +41,17 @@ export default async ({ queueUrl, functionName, endpointUrl: endpoint, template,
     logger.warning(`${invocationFailures} messages failed to be processed and were not deleted from queue`);
   }
 };
+
+async function allResourcesValid(sqsClient, queueUrl, lambdaClient, functionName) {
+  const resourcesToValidate = [
+    {
+      type: "queue",
+      value: queueUrl,
+    },
+    {
+      type: "function",
+      value: functionName,
+    },
+  ];
+  return await resourceValidator.validate(resourcesToValidate, sqsClient, lambdaClient);
+}

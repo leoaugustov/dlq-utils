@@ -2,17 +2,23 @@ import queueToQueue from 'queue-to-queue';
 import { consumeMessages } from 'sqs-consumer';
 import { sendMessage } from 'sqs';
 import { SQSClient } from '@aws-sdk/client-sqs';
+import resourceValidator from "resource-validator";
 jest.mock('sqs-consumer', () => ({
   consumeMessages: jest.fn()
 }));
 jest.mock('sqs', () => ({
   sendMessage: jest.fn()
 }));
+jest.mock('resource-validator', () => ({
+  validate: jest.fn()
+}));
 
 it('should consume messages from source queue and send them to dest queue', async () => {
   const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
   const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
   const endpointUrl = 'http://localhost:4566';
+
+  resourceValidator.validate.mockReturnValueOnce(true);
 
   await queueToQueue({ sourceQueueUrl, destQueueUrl, endpointUrl, keepSource: false });
 
@@ -37,6 +43,8 @@ it('should apply the template to message body when it exists', async () => {
   const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
   const template = '{ "someArray": [ *msg* ] }';
 
+  resourceValidator.validate.mockReturnValueOnce(true);
+
   await queueToQueue({ sourceQueueUrl, destQueueUrl, template, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
@@ -52,6 +60,8 @@ it('should create consumer that returns false when keepSource param is true', as
   const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
   const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
 
+  resourceValidator.validate.mockReturnValueOnce(true);
+
   await queueToQueue({ sourceQueueUrl, destQueueUrl, keepSource: true });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
@@ -64,10 +74,23 @@ it('should create consumer that returns true when keepSource param is false', as
   const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
   const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
 
+  resourceValidator.validate.mockReturnValueOnce(true);
+
   await queueToQueue({ sourceQueueUrl, destQueueUrl, keepSource: false });
 
   expect(consumeMessages.mock.calls.length).toBe(1);
 
   const shouldDeleteMessage = await consumeMessages.mock.calls[0][2]({ body: 'some message' });
   expect(shouldDeleteMessage).toBe(true);
+});
+
+it('should not consume messages when some queue is not valid', async () => {
+  const sourceQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/source-test-queue';
+  const destQueueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/dest-test-queue';
+
+  resourceValidator.validate.mockReturnValueOnce(false);
+
+  await queueToQueue({ sourceQueueUrl, destQueueUrl, keepSource: false });
+
+  expect(consumeMessages.mock.calls.length).toBe(0);
 });

@@ -1,4 +1,5 @@
-import { sendMessage, receiveMessages, deleteMessages } from 'sqs';
+import { sendMessage, receiveMessages, deleteMessages, isExistingQueue } from 'sqs';
+import { SQSServiceException } from "@aws-sdk/client-sqs";
 
 function createSqsClient() {
   return  { send: jest.fn() };
@@ -122,4 +123,48 @@ describe('deleteMessages', () => {
     await expect(async () => await deleteMessages(sqsClient, queueUrl, [ 'receiptHandle1', 'receiptHandle2' ]))
       .rejects.toThrow(Error);
   })
+});
+
+describe('isExistingQueue', () => {
+  it('should return true when client does not throw exception', async () => {
+    const sqsClient = createSqsClient();
+    const queueName = 'test-queue';
+
+    const queueExists = await isExistingQueue(sqsClient, queueName);
+
+    expect(sqsClient.send.mock.calls.length).toBe(1);
+
+    const commandInput = sqsClient.send.mock.calls[0][0].input;
+    expect(commandInput.QueueName).toBe(queueName);
+
+    expect(queueExists).toBe(true);
+  });
+
+  it('should return false when client throws SQSServiceException', async () => {
+    const sqsClient = createSqsClient();
+    const queueName = 'test-queue';
+
+    sqsClient.send.mockRejectedValueOnce(new SQSServiceException('error'));
+
+    const queueExists = await isExistingQueue(sqsClient, queueName);
+
+    expect(sqsClient.send.mock.calls.length).toBe(1);
+
+    const commandInput = sqsClient.send.mock.calls[0][0].input;
+    expect(commandInput.QueueName).toBe(queueName);
+
+    expect(queueExists).toBe(false);
+  });
+
+  it('should throw exception when client throws any exception except SQSServiceException', async () => {
+    const sqsClient = createSqsClient();
+    const queueName = 'test-queue';
+
+    sqsClient.send.mockRejectedValueOnce(new Error('error'));
+
+    await expect(async () => await isExistingQueue(sqsClient, queueName))
+      .rejects.toThrow(Error);
+
+    expect(sqsClient.send.mock.calls.length).toBe(1);
+  });
 });

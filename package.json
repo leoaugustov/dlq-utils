@@ -7,6 +7,7 @@
     "build": "rm -rf dist && babel src -d dist",
     "build:dev": "rm -rf dist && babel src -d dist && touch dist/.version",
     "lint": "eslint './src/**/*.js'",
+    "lint:fix": "eslint './src/**/*.js' --fix",
     "release": "pkg package.json"
   },
   "bin": "./dist/index.js",

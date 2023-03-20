@@ -66,3 +66,8 @@ global.assertQueueContainsMessages = async (sqsClient, queueName, expectedMessag
   const messagesFoundInQueue = await receiveMessages(sqsClient, getQueueUrl(queueName));
   expect(messagesFoundInQueue.map(message => message.body)).toIncludeSameMembers(expectedMessages);
 };
+
+global.assertQueueIsEmpty = async (sqsClient, queueName) => {
+  const messagesFoundInQueue = await receiveMessages(sqsClient, getQueueUrl(queueName));
+  expect(messagesFoundInQueue).toHaveLength(0);
+};
