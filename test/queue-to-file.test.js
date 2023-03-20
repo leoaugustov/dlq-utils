@@ -56,7 +56,7 @@ it('should create consumer that returns false', async () => {
   expect(shouldDeleteMessage).toBe(false);
 });
 
-it('should not consume messages when some resource is not valid', async () => {
+it('should not consume messages when queue is not valid', async () => {
   const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
   const file = 'path/filename.csv';
 
