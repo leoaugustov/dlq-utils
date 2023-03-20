@@ -39,7 +39,7 @@ it('should consume messages from queue (without deleting) and save them in file'
   await assertQueueContainsMessages(sqsClient, QUEUE_NAME, messages);
 });
 
-it('should not try to process when queue does not exist', async () => {
+it('should not throw exception when queue does not exist', async () => {
   const fileName = temporaryFile();
   const queueUrl = getQueueUrl("nonexistent");
   await queueToFile({
