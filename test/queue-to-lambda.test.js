@@ -1,3 +1,4 @@
+import randomString from 'randomstring';
 import queueToLambda from 'queue-to-lambda';
 import { invokeFunction } from 'lambda';
 import { consumeMessages } from 'sqs-consumer';
@@ -109,8 +110,8 @@ it('should apply the template to message body when it exists', async () => {
 
   const message = {
     body: '{ "field": "value" }',
-    id: '1231124',
-    receiptHandle: 'receipt-handle'
+    id: randomString.generate(21),
+    receiptHandle: randomString.generate(7)
   };
   await consumeMessages.mock.calls[0][2](message);
 
