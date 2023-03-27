@@ -1,18 +1,24 @@
 import { receiveMessages, deleteMessages } from "./sqs";
 
 export async function consumeMessages(sqsClient, queueUrl, messageConsumer) {
-  let messages = [];
+  const processedMessages = [];
+  let currentMessagesBatch = [];
   do {
-    messages = await receiveMessages(sqsClient, queueUrl);
+    currentMessagesBatch = await receiveMessages(sqsClient, queueUrl);
 
     let messagesToDelete = [];
-    for (const message of messages) {
+    for (const message of currentMessagesBatch) {
+      if (processedMessages.includes(message.id)) {
+        continue;
+      }
+
       if (await messageConsumer(message)) {
         messagesToDelete.push(message.receiptHandle);
+      } else {
+        processedMessages.push(message.id);
       }
     }
 
     await deleteMessages(sqsClient, queueUrl, messagesToDelete);
-    messagesToDelete = [];
-  } while (messages.length > 0);
+  } while (currentMessagesBatch.length > 0);
 }

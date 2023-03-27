@@ -1,3 +1,4 @@
+import randomString from 'randomstring';
 import { sendMessage, receiveMessages, deleteMessages, isExistingQueue } from 'sqs';
 import { SQSServiceException } from "@aws-sdk/client-sqs";
 
@@ -10,7 +11,7 @@ describe('sendMessage', () => {
     const sqsClient = createSqsClient();
     const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
     const message = 'message';
-    const messageId = '6cb083c5-c69b-49b6-9a78-f2ff95e07fa7';
+    const messageId = randomString.generate(21);
 
     sqsClient.send.mockReturnValueOnce({
       MessageId: messageId
@@ -34,12 +35,12 @@ describe('receiveMessages', () => {
 
     const messages = [{
       Body: 'messageBody1',
-      ReceiptHandle: 'a12345',
-      MessageId: 'b4567'
+      ReceiptHandle: randomString.generate(7),
+      MessageId: randomString.generate(21)
     }, {
       Body: 'messageBody2',
-      ReceiptHandle: 'c6789',
-      MessageId: 'd8910'
+      ReceiptHandle: randomString.generate(7),
+      MessageId: randomString.generate(21)
     }];
 
     sqsClient.send.mockReturnValueOnce({
@@ -115,7 +116,7 @@ describe('deleteMessages', () => {
 
     sqsClient.send.mockReturnValueOnce({
       Failed: [{
-        Id: '1234',
+        Id: randomString.generate(21),
         Code: 'ERR123'
       }]
     });
