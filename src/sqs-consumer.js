@@ -11,10 +11,11 @@ export async function consumeMessages(sqsClient, queueUrl, messageConsumer) {
       if (processedMessages.includes(message.id)) {
         continue;
       }
-      processedMessages.push(message.id);
 
       if (await messageConsumer(message)) {
         messagesToDelete.push(message.receiptHandle);
+      } else {
+        processedMessages.push(message.id);
       }
     }
 

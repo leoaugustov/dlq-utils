@@ -108,10 +108,11 @@ describe('consumeMessages', () => {
     expect(deleteMessages).toHaveBeenNthCalledWith(3, sqsClient, queueUrl, []);
   });
 
-  it('should not process a message more than once', async () => {
+  it('should not process a message more than once when it is not meant to be deleted', async () => {
     const sqsClient = createSqsClient();
     const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
     const messageConsumer = jest.fn();
+    messageConsumer.mockReturnValue(false);
 
     const firstMessage = {
       id: randomString.generate(21),
