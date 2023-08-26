@@ -7,7 +7,7 @@ import resourceValidator from "./resource-validator";
 export default async ({ file, queueUrl, endpointUrl: endpoint }) => {
   const sqsClient = new SQSClient({ endpoint });
 
-  if (!(await isQueueValid(sqsClient, queueUrl))) {
+  if (!(await resourceValidator.validateQueue(sqsClient, queueUrl))) {
     return;
   }
 
@@ -23,8 +23,3 @@ export default async ({ file, queueUrl, endpointUrl: endpoint }) => {
   await consumeMessages(sqsClient, queueUrl, messageConsumer);
   logger.success(`Finished queue-to-file successfully. ${totalMessagesSaved} messages saved to file`);
 };
-
-async function isQueueValid(sqsClient, queueUrl) {
-  const resourcesToValidate = [{ type: "queue", value: queueUrl }];
-  return await resourceValidator.validate(resourcesToValidate, sqsClient);
-}

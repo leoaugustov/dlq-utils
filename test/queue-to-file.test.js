@@ -10,7 +10,7 @@ jest.mock('fs', () => ({
   createWriteStream: jest.fn()
 }));
 jest.mock('resource-validator', () => ({
-  validate: jest.fn()
+  validateQueue: jest.fn()
 }));
 
 it('should consume messages from queue and save them in file', async () => {
@@ -20,7 +20,7 @@ it('should consume messages from queue and save them in file', async () => {
   const lineWriter = { write: jest.fn() };
 
   fs.createWriteStream.mockReturnValueOnce(lineWriter);
-  resourceValidator.validate.mockReturnValueOnce(true);
+  resourceValidator.validateQueue.mockReturnValueOnce(true);
 
   await queueToFile({ queueUrl, file, endpointUrl });
 
@@ -46,7 +46,7 @@ it('should create consumer that returns false', async () => {
   const lineWriter = { write: jest.fn() };
 
   fs.createWriteStream.mockReturnValueOnce(lineWriter);
-  resourceValidator.validate.mockReturnValueOnce(true);
+  resourceValidator.validateQueue.mockReturnValueOnce(true);
 
   await queueToFile({ queueUrl, file });
 
@@ -60,7 +60,7 @@ it('should not consume messages when queue is not valid', async () => {
   const queueUrl = 'https://sqs.us-east-1.amazonaws.com/00000000/test-queue';
   const file = 'path/filename.csv';
 
-  resourceValidator.validate.mockReturnValueOnce(false);
+  resourceValidator.validateQueue.mockReturnValueOnce(false);
 
   await queueToFile({ queueUrl, file });
 
