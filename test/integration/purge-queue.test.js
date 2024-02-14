@@ -21,7 +21,7 @@ it('should consume messages from queue and delete only those that match the rege
   const messages = await sendTestMessages(sqsClient, QUEUE_NAME);
 
   const messagesThatShouldBeDeleted = messages.filter(message => message.slice(-1) % 2);
-  const messagesThatShouldBeKept = messages.filter(message => ! message.slice(-1) % 2);
+  const messagesThatShouldBeKept = messages.filter(message => !(message.slice(-1) % 2));
 
   await purgeQueue({
     endpointUrl: SQS_ENDPOINT_URL,
@@ -29,6 +29,7 @@ it('should consume messages from queue and delete only those that match the rege
     queueUrl
   });
 
+  await waitVisibilityTimeout();
   await assertQueueContainsMessages(sqsClient, QUEUE_NAME, messagesThatShouldBeKept);
 });
 
