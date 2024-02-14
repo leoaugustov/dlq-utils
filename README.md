@@ -81,7 +81,7 @@ Next, you need to run the command below inside the repository folder to locally 
 npx link .
 ```
 
-After that, every time you make a change in the code base you need to rebuild the project to update the CLI behavior. To execute commands use the prefix `npx` and do not forget the parameter `--endpoint-url`, for example:
+After that, every time you make a change in the code base you need to rebuild the project to update the CLI behavior. To execute commands use the prefix `npx` and do not forget the parameter `--endpoint-url`:
 
 ```shell
 npx dlq-utils queue-to-lambda -s "http://localhost:9324/000000000000/some-queue" -d "some-lambda-function" --endpoint-url "http://localhost:9324"
@@ -91,5 +91,5 @@ npx dlq-utils queue-to-lambda -s "http://localhost:9324/000000000000/some-queue"
 
 Here you will find a list of features I want to include in the project:
 
-- 🔧 Add tooling to facilitate local testing
+- 🔧 Add tooling to facilitate local testing (RODAR LAMBDA LOCAL: https://github.com/lambci/docker-lambda; https://docs.localstack.cloud/user-guide/aws/lambda/)
 - 🔧 Add hot reload to automatically rebuild the project and improve the development experience
