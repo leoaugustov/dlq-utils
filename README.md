@@ -91,5 +91,5 @@ npx dlq-utils queue-to-lambda -s "http://localhost:9324/000000000000/some-queue"
 
 Here you will find a list of features I want to include in the project:
 
-- 🔧 Add tooling to facilitate local testing (RODAR LAMBDA LOCAL: https://github.com/lambci/docker-lambda; https://docs.localstack.cloud/user-guide/aws/lambda/)
+- 🔧 Add tooling to facilitate local testing
 - 🔧 Add hot reload to automatically rebuild the project and improve the development experience
