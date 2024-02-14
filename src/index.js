@@ -54,8 +54,8 @@ program
     "Consume all messages from a queue (without deleting) to save them in a text file. " +
       "If the file already exists it will be overwritten"
   )
-  .requiredOption("-s --file <string>", "The full name of the text file where the messages should be saved")
-  .requiredOption("-d --queue-url <string>", "The URL of the queue that contains the messages")
+  .requiredOption("-s --queue-url <string>", "The URL of the queue that contains the messages")
+  .requiredOption("-d --file <string>", "The full name of the text file where the messages should be saved")
   .option(
     "--endpoint-url <string>",
     "Just like in aws-cli commands, this is only required when using a local version of SQS"
