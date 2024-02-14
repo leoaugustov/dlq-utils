@@ -7,6 +7,7 @@ import fileToQueue from "./file-to-queue";
 import queueToFile from "./queue-to-file";
 import queueToLambda from "./queue-to-lambda";
 import queueToQueue from "./queue-to-queue";
+import purgeQueue from "./purge-queue";
 
 const program = new Command();
 
@@ -77,5 +78,16 @@ program
       "Must be a valid JSON with the token *msg* that will be replaced by the actual message"
   )
   .action(queueToQueue);
+
+program
+  .command("purge-queue")
+  .description("Clear queue conditionally based on a regular expression")
+  .requiredOption("-r --regex <string>", "The regex to select the messages that should be deleted")
+  .requiredOption("-q --queue-url <string>", "The URL of the queue that contains the messages")
+  .option(
+    "--endpoint-url <string>",
+    "Just like in aws-cli commands, this is only required when using a local version of SQS and Lambda (e.g. LocalStack)"
+  )
+  .action(purgeQueue);
 
 program.parse();
