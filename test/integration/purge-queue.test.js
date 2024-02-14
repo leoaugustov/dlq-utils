@@ -25,7 +25,7 @@ it('should consume messages from queue and delete only those that match the rege
 
   await purgeQueue({
     endpointUrl: SQS_ENDPOINT_URL,
-    regex: `^(${messagesThatShouldBeDeleted.join(" | ")})$`,
+    regex: `^(${messagesThatShouldBeDeleted.join("|")})$`,
     queueUrl
   });
 
