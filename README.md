@@ -41,7 +41,7 @@ AWS_PROFILE=configured-profile dlq-utils queue-to-lambda -s "https://sqs.us-east
 Read a text file to send each line as a message to an Amazon SQS queue.
 
 ```shell
-AWS_PROFILE=configured-profile dlq-utils file-to-queue -s "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" -d "/Users/myuser/Documents/some-file.txt"
+AWS_PROFILE=configured-profile dlq-utils file-to-queue -s "/Users/myuser/Documents/some-file.txt" -d "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue"
 ```
 
 #### `queue-to-file`
