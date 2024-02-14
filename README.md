@@ -22,8 +22,8 @@ brew upgrade dlq-utils
 
 - Invoke a function using messages from a queue
 - Move or copy messages from one queue to another
+- Delete messages from a queue based on a regular expression
 - Template a message before sending it to a queue or invoking a function
-- (soon) Filter messages before sending them to a queue or invoking a function
 - Save messages from a queue to a text file
 - Read lines from a text file and send them as messages to a queue
 
@@ -34,28 +34,35 @@ It's necessary to specify the environment variable `AWS_PROFILE` with the [named
 Invoke an AWS Lambda function with all messages from an Amazon SQS queue, being able to transform them before invoking the function.
 
 ```shell
-AWS_PROFILE=configured-profile dlq-utils queue-to-lambda --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --function-name "some-lambda-function"
+AWS_PROFILE=configured-profile dlq-utils queue-to-lambda -s "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" -d "some-lambda-function"
 ```
 
 #### `file-to-queue`
 Read a text file to send each line as a message to an Amazon SQS queue.
 
 ```shell
-AWS_PROFILE=configured-profile dlq-utils file-to-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --file "/Users/myuser/Documents/some-file.txt"
+AWS_PROFILE=configured-profile dlq-utils file-to-queue -s "/Users/myuser/Documents/some-file.txt" -d "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue"
 ```
 
 #### `queue-to-file`
 Consume all messages from an Amazon SQS queue to save them in a text file.
 
 ```shell
-AWS_PROFILE=configured-profile dlq-utils queue-to-file --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --file "/Users/myuser/Documents/some-file.txt"
+AWS_PROFILE=configured-profile dlq-utils queue-to-file -s "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" -d "/Users/myuser/Documents/some-file.txt"
 ```
 
 #### `queue-to-queue`
 Move all messages from an Amazon SQS queue to another one, being able to transform them.
 
 ```shell
-AWS_PROFILE=configured-profile dlq-utils queue-to-queue --source-queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/source-queue" --dest-queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/dest-queue"
+AWS_PROFILE=configured-profile dlq-utils queue-to-queue -s "https://sqs.us-east-1.amazonaws.com/000000000000/source-queue" -d "https://sqs.us-east-1.amazonaws.com/000000000000/dest-queue"
+```
+
+#### `purge-queue`
+Purge a queue conditionally based on a regular expression tested on the message body.
+
+```shell
+AWS_PROFILE=configured-profile dlq-utils purge-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --regex ".foo"
 ```
 For full documentation run `dlq-utils help [command]`.
 
@@ -74,12 +81,15 @@ Next, you need to run the command below inside the repository folder to locally 
 npx link .
 ```
 
-After that, every time you make a change in the code base you need to rebuild the project to update the CLI behavior.
+After that, every time you make a change in the code base you need to rebuild the project to update the CLI behavior. To execute commands use the prefix `npx` and do not forget the parameter `--endpoint-url`:
+
+```shell
+npx dlq-utils queue-to-lambda -s "http://localhost:9324/000000000000/some-queue" -d "some-lambda-function" --endpoint-url "http://localhost:9324"
+```
 
 ## Roadmap
 
 Here you will find a list of features I want to include in the project:
 
-- ✨ Add the ability to filter out messages with a regex
 - 🔧 Add tooling to facilitate local testing
 - 🔧 Add hot reload to automatically rebuild the project and improve the development experience

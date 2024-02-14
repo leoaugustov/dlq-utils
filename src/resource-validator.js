@@ -57,7 +57,7 @@ async function validateQueue(sqsClient, queueUrl) {
   if (await isExistingQueue(sqsClient, queueName)) {
     return true;
   }
-  logger.error("(ERROR) Some of the specified queues do not exist or are not accessible");
+  logger.error(`(ERROR) Queue ${queueUrl} does not exist or is not accessible`);
   return false;
 }
 
@@ -76,4 +76,4 @@ function mapPermissionToFsMode(permissionFlag) {
   throw new Error("Unknown file permission");
 }
 
-export default { validate };
+export default { validate, validateQueue };
