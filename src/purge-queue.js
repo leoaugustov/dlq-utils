@@ -23,5 +23,7 @@ export default async ({ regex: condition, queueUrl, endpointUrl: endpoint }) => 
     return false;
   };
   await consumeMessages(sqsClient, queueUrl, messageConsumer);
-  logger.success(`Finished purge-queue successfully. ${totalMessagesDeleted} of ${totalMessages} messages were deleted`);
+  logger.success(
+    `Finished purge-queue successfully. ${totalMessagesDeleted} of ${totalMessages} messages were deleted`
+  );
 };
