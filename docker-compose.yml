@@ -1,0 +1,16 @@
+version: '3'
+services:
+  sqs:
+    image: roribio16/alpine-sqs:latest
+    ports:
+      - 9324:9324
+      - 9325:9325
+  sqs-setup:
+    entrypoint: "/tools/wait-for-it.sh sqs:9324 -- /tools/setup-sqs.sh"
+    image: "amazon/aws-cli:2.14.6"
+    volumes:
+      - "./tools/docker:/tools"
+    depends_on:
+      - sqs
+    links:
+      - sqs

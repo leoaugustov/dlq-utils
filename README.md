@@ -62,7 +62,7 @@ AWS_PROFILE=configured-profile dlq-utils queue-to-queue -s "https://sqs.us-east-
 Purge a queue conditionally based on a regular expression tested on the message body.
 
 ```shell
-AWS_PROFILE=configured-profile dlq-utils purge-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --regex ".foo"
+AWS_PROFILE=configured-profile dlq-utils purge-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --regex "\\.foo"
 ```
 For full documentation run `dlq-utils help [command]`.
 
@@ -87,9 +87,11 @@ After that, every time you make a change in the code base you need to rebuild th
 npx dlq-utils queue-to-lambda -s "http://localhost:9324/000000000000/some-queue" -d "some-lambda-function" --endpoint-url "http://localhost:9324"
 ```
 
+To facilitate local executions you can run `docker-compose up` inside the repository folder to start a Docker container that exposes two SQS queues, `source-queue` and `dest-queue`. The first queue will contain 4 messages. It is possible to customize this initial state by editing [`./tools/docker/setup-sqs.sh`](https://github.com/leoaugustov/dlq-utils/tree/main/tools/docker/setup-sqs.sh).
+
 ## Roadmap
 
 Here you will find a list of features I want to include in the project:
 
-- 🔧 Add tooling to facilitate local testing
+- ✨ Add the ability to delete messages that DON'T match the regex in purge-queue command
 - 🔧 Add hot reload to automatically rebuild the project and improve the development experience
