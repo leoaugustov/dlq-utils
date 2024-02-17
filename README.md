@@ -62,7 +62,7 @@ AWS_PROFILE=configured-profile dlq-utils queue-to-queue -s "https://sqs.us-east-
 Purge a queue conditionally based on a regular expression tested on the message body.
 
 ```shell
-AWS_PROFILE=configured-profile dlq-utils purge-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --regex ".foo"
+AWS_PROFILE=configured-profile dlq-utils purge-queue --queue-url "https://sqs.us-east-1.amazonaws.com/000000000000/some-queue" --regex "\\.foo"
 ```
 For full documentation run `dlq-utils help [command]`.
 
